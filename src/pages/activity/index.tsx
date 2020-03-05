@@ -72,28 +72,8 @@ class Home extends Component {
   render() {
     return (
       <View className="index">
-        <AtIcon value="clock" size="30" color="#F00"></AtIcon>
-        <AtIcon
-          prefixClass="icon"
-          value="shouye"
-          size="30"
-          color="#F00"
-        ></AtIcon>
-
-        <Button className="add_btn" onClick={this.props.add}>
-          + 123
-        </Button>
-        <Button className="dec_btn" onClick={this.props.dec}>
-          -
-        </Button>
-        <Button className="dec_btn" onClick={this.props.asyncAdd}>
-          async
-        </Button>
         <View>
-          <Text>{this.props.counter.num}</Text>
-        </View>
-        <View>
-          <Text>主页</Text>
+          <Text>活动页</Text>
         </View>
       </View>
     );

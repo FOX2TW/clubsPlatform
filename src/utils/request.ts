@@ -29,7 +29,7 @@ export default function fetch(options: Options) {
   })
     .then(res => {
       //TODO
-      Promise.resolve(res.data);
+      Promise.resolve(res);
     })
     .catch(err => {
       //TODO

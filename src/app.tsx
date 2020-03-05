@@ -1,7 +1,7 @@
 import Taro, { Component, Config } from "@tarojs/taro";
 import { Provider } from "@tarojs/redux";
 
-import Home from "./pages/home";
+import User from "./pages/user";
 
 import configStore from "./store";
 
@@ -25,7 +25,15 @@ class App extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    pages: ["pages/home/index", "pages/clubs/index", "pages/user/index"],
+    pages: [
+      "pages/home/index",
+      "pages/clubs/index",
+      "pages/user/index",
+      "pages/activity/index",
+      "pages/user/setting",
+      "pages/user/apply",
+      "pages/user/approve"
+    ],
     window: {
       backgroundTextStyle: "light",
       navigationBarBackgroundColor: "#fff",
@@ -52,6 +60,12 @@ class App extends Component {
           selectedIconPath: "./assets/images/tabbar/club_selected.png"
         },
         {
+          pagePath: "pages/activity/index",
+          text: "活动",
+          iconPath: "./assets/images/tabbar/activity.png",
+          selectedIconPath: "./assets/images/tabbar/activity_selected.png"
+        },
+        {
           pagePath: "pages/user/index",
           text: "我的",
           iconPath: "./assets/images/tabbar/user.png",
@@ -74,7 +88,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Home />
+        <User />
       </Provider>
     );
   }

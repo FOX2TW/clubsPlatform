@@ -1,0 +1,33 @@
+.setting-container {
+  padding-top: 20px;
+
+  .item {
+    display: flex;
+    height: 60px;
+    justify-content: space-between;
+    padding: 20px;
+    color: #333333;
+    font-size: 28px;
+    background-color: white;
+    border-bottom: 1px solid #f3f3f3;
+    align-items: center;
+
+    &:active {
+      opacity: 0.5;
+    }
+
+    .extra {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .thumb {
+        width: 50px;
+        height: 50px;
+        border: 1px solid #f1f1f1;
+        border-radius: 25px;
+      }
+
+    }
+  }
+}

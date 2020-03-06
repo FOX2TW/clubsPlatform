@@ -1,6 +1,6 @@
 import {ComponentClass} from "react";
 import Taro, {Component, Config} from "@tarojs/taro";
-import {Text, View} from "@tarojs/components";
+import {View} from "@tarojs/components";
 
 import "./index.scss";
 import {connect} from "@tarojs/redux";
@@ -75,7 +75,7 @@ class Clubs extends Component {
             ? <View className='tab-content'>
                 {
                   this.props.clubs.clubs.map((club, i) =>
-                    <ClubItem key={i} club={club} onClick={this.navigate("/pages/clubs/detail")} />
+                    <ClubItem key={i} club={club} isNotMyClub={false} onClick={this.navigate("/pages/clubs/detail")} />
                   )
                 }
             </View>
@@ -83,7 +83,9 @@ class Clubs extends Component {
         }
         {
           this.state.current === 1
-            ? <View className='tab-content'>标签2的内容</View>
+            ? this.props.clubs.clubs.map((club, i) =>
+              <ClubItem key={i} club={club} isNotMyClub onClick={this.navigate("/pages/clubs/detail")} />
+            )
             : null
         }
 

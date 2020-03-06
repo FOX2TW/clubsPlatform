@@ -38,39 +38,41 @@
     justify-content: flex-start;
     padding-left: 15px;
     padding-right: 15px;
+
+    .top {
+      height: 60px;
+      display: flex;
+      flex-flow: row;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      .name {
+      }
+
+      .tags {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        margin-top: -10px;
+
+        .tag {
+          margin-left: 5px;
+        }
+      }
+    }
+
+    .bottom {
+      display: flex;
+
+      .desc {
+        font-size: small;
+        overflow: hidden;
+        text-overflow: fade;
+        white-space: normal;
+        color: #929292;
+      }
+    }
   }
 
-  .top{
-    height: 60px;
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-
-  .name {
-  }
-
-  .bottom{
-    display: flex;
-  }
-  .desc {
-    font-size: small;
-    overflow: hidden;
-    text-overflow: fade;
-    white-space: normal;
-    color: #929292;
-  }
-
-  .tags {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    margin-top: -10px;
-  }
-
-  .tag{
-    margin-left: 5px;
-  }
 
 }

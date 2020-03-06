@@ -1,0 +1,70 @@
+.approve-container {
+  padding: 20px;
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px 10px 0 0;
+    margin-bottom: 30px;
+
+    .card-title-wrap {
+      height: 70px;
+      border-bottom: 1px solid #f4f4f4;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+
+      .title {
+        font-size: 28px;
+        color: #333;
+        padding-left: 10px;
+      }
+
+      .extra {
+        font-size: 26px;
+        color: #666;
+      }
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+
+      .text-wrapper {
+        display: flex;
+
+        .label {
+          color: #333;
+          font-size: 28px;
+          margin-bottom: 10px;
+          flex-shrink: 0;
+        }
+
+        .text {
+          color: #555;
+          font-size: 26px;
+          margin-bottom: 10px;
+        }
+      }
+
+    }
+
+    .card-actions {
+      display: flex;
+      background-color: #f5f5f5;
+
+      .btn {
+        flex: 1;
+        font-size: 30px;
+        color: #333;
+
+        &:after {
+          border: none;
+        }
+      }
+    }
+  }
+}

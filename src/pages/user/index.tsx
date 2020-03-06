@@ -42,6 +42,7 @@ class User extends Component {
     //   console.log(res);
     // });
     const userInfo = JSON.parse(get(res, "detail.rawData", ""));
+    console.log(userInfo);
     this.setState({ userInfo });
   };
 
@@ -77,7 +78,7 @@ class User extends Component {
               </Button>
               <Button
                 className="item"
-                onClick={this.navigate("/pages/user/approve")}
+                onClick={this.navigate("/pages/user/apply")}
               >
                 <Text>我的申请</Text>
                 <AtIcon value="chevron-right" size="20" color="#c8c8c8" />

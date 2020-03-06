@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2883155",
+      "name": "加入",
+      "font_class": "jiaru",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "4172587",
+      "name": "创建",
+      "font_class": "chuangjian",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "11864940",
+      "name": "创建",
+      "font_class": "chuangjian1",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "8102837",
+      "name": "活动",
+      "font_class": "huodong",
+      "unicode": "e66e",
+      "unicode_decimal": 58990
+    },
+    {
       "icon_id": "204160",
       "name": "club",
       "font_class": "club",

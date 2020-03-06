@@ -52,6 +52,7 @@ class Setting extends Component {
           <Text className="title">昵称</Text>
           <View className="extra">
             <Text>Jiaxin</Text>
+
             <AtIcon value="chevron-right" size="20" color="#c8c8c8" />
           </View>
         </View>

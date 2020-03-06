@@ -18,7 +18,7 @@
 
       .title {
         font-size: 28px;
-        color: #333;
+        color: #3E4855;
         padding-left: 10px;
       }
 
@@ -37,14 +37,14 @@
         display: flex;
 
         .label {
-          color: #333;
+          color: #939DA7;
           font-size: 28px;
           margin-bottom: 10px;
           flex-shrink: 0;
         }
 
         .text {
-          color: #555;
+          color: #3E4855;
           font-size: 26px;
           margin-bottom: 10px;
         }
@@ -59,7 +59,7 @@
       .btn {
         flex: 1;
         font-size: 30px;
-        color: #333;
+        color: #3E4855;
 
         &:after {
           border: none;

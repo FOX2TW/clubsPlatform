@@ -1,4 +1,9 @@
 .index {
   flex-direction: column;
   width: 100%;
+  .line-limit-length {
+    overflow: hidden;
+    text-overflow: fade;
+    white-space: nowrap;
+  }
 }

@@ -39,13 +39,24 @@
     background-color: white;
   }
 
-  .avatars {
+  .users {
     display: flex;
     flex-flow: row;
-  }
 
-  .avatar {
-    margin-left: 15px;
+    .user{
+      margin-left: 15px;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      .avatar{
+
+      }
+
+      .name{
+        font-size: smaller;
+        color: #939DA7;
+      }
+    }
   }
 
   .activity {

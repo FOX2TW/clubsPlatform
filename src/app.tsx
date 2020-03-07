@@ -29,6 +29,8 @@ class App extends Component {
       "pages/home/index",
       "pages/clubs/index",
       "pages/clubs/detail",
+      "pages/clubs/users",
+      "pages/clubs/edit",
       "pages/user/index",
       "pages/activity/index",
       "pages/user/setting",

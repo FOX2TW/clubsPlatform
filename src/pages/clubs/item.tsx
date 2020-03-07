@@ -6,9 +6,7 @@ import './item.scss'
 import {Club} from "./model/clubs";
 
 type PageStateProps = {};
-type PageDispatchProps = {
-  getClubs: () => void
-};
+type PageDispatchProps = {};
 type PageOwnProps = {
   club: Club
   isNotMyClub: boolean

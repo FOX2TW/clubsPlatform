@@ -9,3 +9,12 @@ export interface Club {
 }
 
 export type ClubList = Array<Club>
+
+export interface User {
+  id: number
+  photo: string
+  displayName: string
+  weChatNO?: string
+  cellphone?: string
+  address?: string
+}

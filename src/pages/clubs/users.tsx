@@ -50,8 +50,8 @@ class Users extends Component {
   render() {
     return (
       <View className="users-container">
-        {this.users.map((user, i) => (
-          <View key={i} className="user">
+        {this.users.map(user => (
+          <View key={user.id} className="user">
             <View className="avatar">
               {/* <AtAvatar image={require(`./../../assets/images/user/${user.photo}.png`)} circle/> */}
             </View>

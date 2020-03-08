@@ -35,8 +35,8 @@ interface ClubForm {
 }
 
 @connect(
-  ({ club }) => ({
-    types: club.types
+  ({ clubs }) => ({
+    types: clubs.types
   }),
   dispatch =>
     bindActionCreators(

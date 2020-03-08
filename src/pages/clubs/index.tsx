@@ -1,36 +1,35 @@
-import {ComponentClass} from "react";
-import Taro, {Component, Config} from "@tarojs/taro";
-import {View} from "@tarojs/components";
+import { ComponentClass } from "react";
+import Taro, { Component, Config } from "@tarojs/taro";
+import { View } from "@tarojs/components";
+import { AtSegmentedControl } from "taro-ui";
+import { connect } from "@tarojs/redux";
+import { getClubs } from "@/actions/clubs";
+import { ClubList } from "@/types";
+import ClubItem from "@/components/ClubItem";
 
 import "./index.scss";
-import {connect} from "@tarojs/redux";
-import {getClubs} from "./store/actions/clubs.action";
-import {ClubList} from "./model/clubs";
-import ClubItem from './item';
-import {AtSegmentedControl} from "taro-ui";
 
 type PageStateProps = {
-  currentUserId: number
+  currentUserId: number;
   clubs: {
-    clubs: ClubList
-  }
+    clubs: ClubList;
+  };
 };
 type PageDispatchProps = {
-  getClubs: () => void
+  getClubs: () => void;
 };
 type PageOwnProps = {};
 type PageState = {
-  currentPage: number
+  currentPage: number;
 };
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
 interface Clubs {
-  props: IProps
+  props: IProps;
 }
 
-
 @connect(
-  ({clubs}) => ({
+  ({ clubs }) => ({
     clubs
   }),
   dispatch => ({
@@ -48,52 +47,57 @@ class Clubs extends Component {
     currentPage: 0
   };
 
-  handleClick (value) {
+  handleClick(value) {
     this.setState({
       currentPage: value
-    })
+    });
   }
 
   navigate = url => () => {
-    Taro.navigateTo({url});
+    Taro.navigateTo({ url });
   };
 
   componentWillMount(): void {
-    this.props.getClubs()
+    this.props.getClubs();
   }
 
   render() {
-    const allClubs = this.props.clubs.clubs
+    const allClubs = this.props.clubs.clubs;
     return (
-      <View className='index'>
+      <View className="index">
         <AtSegmentedControl
-          values={['我的俱乐部', '俱乐部列表']}
+          values={["我的俱乐部", "俱乐部列表"]}
           onClick={this.handleClick.bind(this)}
           current={this.state.currentPage}
         />
-        {
-          this.state.currentPage === 0
-            ? <View className='tab-content'>
-                { //前期俱乐部较少时，获取所有俱乐部，并且过滤显示我的俱乐部
-                  allClubs.filter(club => club.isJoin).map((club, i) =>
-                    <View key={i}>
-                      <ClubItem  club={club} isNotMyClub={false} onClick={this.navigate(`/pages/clubs/detail?clubId=${club.id}`)} />
-                    </View>
-                  )
-                }
+        {this.state.currentPage === 0 && (
+          <View className="tab-content">
+            {//前期俱乐部较少时，获取所有俱乐部，并且过滤显示我的俱乐部
+            allClubs
+              .filter(club => club.isJoin)
+              .map(club => (
+                <View key={club.id}>
+                  <ClubItem
+                    club={club}
+                    isNotMyClub={false}
+                    onClick={this.navigate(
+                      `/pages/clubs/detail?clubId=${club.id}`
+                    )}
+                  />
+                </View>
+              ))}
+          </View>
+        )}
+        {this.state.currentPage === 1 &&
+          allClubs.map(club => (
+            <View key={club.id}>
+              <ClubItem
+                club={club}
+                isNotMyClub
+                onClick={this.navigate("/pages/clubs/detail?clubId=${club.id}")}
+              />
             </View>
-            : null
-        }
-        {
-          this.state.currentPage === 1
-            ? allClubs.map((club, i) =>
-              <View key={i}>
-                <ClubItem key={i} club={club} isNotMyClub onClick={this.navigate("/pages/clubs/detail?clubId=${club.id}")} />
-              </View>
-            )
-            : null
-        }
-
+          ))}
       </View>
     );
   }

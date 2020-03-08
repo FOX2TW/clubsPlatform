@@ -3,9 +3,9 @@ import { View, Image } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import { ComponentClass } from "react";
 import { AtAvatar, AtButton, AtCard, AtList, AtListItem } from "taro-ui";
-import { getClubDetail } from "./store/actions/clubs.action";
+import { getClubDetail } from "@/actions/clubs";
 import "./detail.scss";
-import { ClubDetail } from "./model/clubs";
+import { ClubDetail } from "@/types";
 
 type PageStateProps = {
   clubs: {
@@ -44,9 +44,9 @@ class Detail extends Component {
     Taro.navigateTo({ url });
   };
 
-  User(user, i) {
+  User(user) {
     return (
-      <View key={i} className="user">
+      <View key={user.id} className="user">
         {/* <AtAvatar
           className="avatar"
           circle
@@ -129,7 +129,7 @@ class Detail extends Component {
         >
           <View className="users">
             {detail.users
-              ? detail.users.map((user, i) => this.User(user, i))
+              ? detail.users.map(user => this.User(user))
               : "还没有会员"}
           </View>
         </AtCard>

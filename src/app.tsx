@@ -32,11 +32,13 @@ class App extends Component {
       "pages/clubs/users",
       "pages/clubs/edit",
       "pages/clubs/form",
+      "pages/clubs/choose",
       "pages/user/index",
       "pages/activity/index",
       "pages/user/setting",
       "pages/user/apply",
-      "pages/user/approve"
+      "pages/user/approve",
+      "pages/activity/form"
     ],
     window: {
       backgroundTextStyle: "light",

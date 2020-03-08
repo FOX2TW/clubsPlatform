@@ -3,7 +3,8 @@ import {
   GET_CLUB_TYPES,
   GET_CLUB_DETAIL,
   GET_CLUBS,
-  EDIT_CLUB
+  EDIT_CLUB,
+  GET_MY_CLUBS
 } from "@/constants";
 
 import { Club, ClubList, ClubTypes } from "@/types";
@@ -43,4 +44,14 @@ export function editClub(clubDetail: Club) {
     type: EDIT_CLUB,
     clubDetail: clubDetail
   };
+}
+
+export function getMyclubs(userId: number) {
+  return dispatch =>
+    clubServices.fetchMyClubs(userId).then(res =>
+      dispatch({
+        type: GET_MY_CLUBS,
+        payload: res.data
+      })
+    );
 }

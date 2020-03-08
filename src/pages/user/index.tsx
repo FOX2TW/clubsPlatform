@@ -91,7 +91,10 @@ class User extends Component {
               <Text>创建俱乐部</Text>
               <AtIcon value="chevron-right" size="20" color="#c8c8c8" />
             </Button>
-            <Button className="item extra">
+            <Button
+              className="item extra"
+              onClick={this.navigate("/pages/clubs/choose")}
+            >
               <Text>发布活动</Text>
               <AtIcon value="chevron-right" size="20" color="#c8c8c8" />
             </Button>

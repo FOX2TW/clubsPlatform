@@ -2,13 +2,15 @@ import {
   GET_CLUB_TYPES,
   EDIT_CLUB,
   GET_CLUB_DETAIL,
-  GET_CLUBS
+  GET_CLUBS,
+  GET_MY_CLUBS
 } from "@/constants";
 
 const INITIAL_STATE = {
   types: [],
   clubs: [],
-  clubDetail: {}
+  clubDetail: {},
+  myClubs: []
 };
 
 export default function clubs(state = INITIAL_STATE, action) {
@@ -32,6 +34,11 @@ export default function clubs(state = INITIAL_STATE, action) {
       return {
         ...state,
         clubDetail: { ...action.clubDetail }
+      };
+    case GET_MY_CLUBS:
+      return {
+        ...state,
+        myClubs: action.payload
       };
     default:
       return state;

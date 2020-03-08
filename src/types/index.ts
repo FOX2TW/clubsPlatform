@@ -31,3 +31,17 @@ export interface ClubType {
 }
 
 export type ClubTypes = Array<ClubType>;
+
+export interface Activity {
+  clubId: number;
+  clubName: string;
+  name: string;
+  picture: string;
+  endJoinDate: string;
+  startDate: string;
+  endDate: string;
+  limit: number;
+  description: string;
+  open: boolean;
+  thumbsUp: number;
+}

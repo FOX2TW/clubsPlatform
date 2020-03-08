@@ -29,8 +29,8 @@ class ClubItem extends Component {
     const club = this.props.club;
       return (
         <View className='item-container' onClick={this.props.onClick}>
-          {club.picture
-            ? <AtAvatar className='avatar' circle image={require(`./../../assets/images/club/${club.picture}.jpg`)} />
+          {club.photo
+            ? <AtAvatar className='avatar' circle image={require(`./../../assets/images/club/${club.photo}.jpg`)} />
             : <AtAvatar circle text='俱乐部' />}
           <View className='body'>
             <View className='top'>

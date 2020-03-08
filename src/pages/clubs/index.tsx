@@ -10,6 +10,7 @@ import ClubItem from './item';
 import {AtSegmentedControl} from "taro-ui";
 
 type PageStateProps = {
+  currentUserId: number
   clubs: {
     clubs: ClubList
   }
@@ -19,7 +20,7 @@ type PageDispatchProps = {
 };
 type PageOwnProps = {};
 type PageState = {
-  current: number
+  currentPage: number
 };
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
@@ -44,12 +45,12 @@ class Clubs extends Component {
   };
 
   state = {
-    current: 0
+    currentPage: 0
   };
 
   handleClick (value) {
     this.setState({
-      current: value
+      currentPage: value
     })
   }
 
@@ -62,29 +63,33 @@ class Clubs extends Component {
   }
 
   render() {
-    console.log(this.props.clubs)
+    const allClubs = this.props.clubs.clubs
     return (
       <View className='index'>
         <AtSegmentedControl
           values={['我的俱乐部', '俱乐部列表']}
           onClick={this.handleClick.bind(this)}
-          current={this.state.current}
+          current={this.state.currentPage}
         />
         {
-          this.state.current === 0
+          this.state.currentPage === 0
             ? <View className='tab-content'>
-                {
-                  this.props.clubs.clubs.map((club, i) =>
-                    <ClubItem key={i} club={club} isNotMyClub={false} onClick={this.navigate("/pages/clubs/detail")} />
+                { //前期俱乐部较少时，获取所有俱乐部，并且过滤显示我的俱乐部
+                  allClubs.filter(club => club.isJoin).map((club, i) =>
+                    <View key={i}>
+                      <ClubItem  club={club} isNotMyClub={false} onClick={this.navigate(`/pages/clubs/detail?clubId=${club.id}`)} />
+                    </View>
                   )
                 }
             </View>
             : null
         }
         {
-          this.state.current === 1
-            ? this.props.clubs.clubs.map((club, i) =>
-              <ClubItem key={i} club={club} isNotMyClub onClick={this.navigate("/pages/clubs/detail")} />
+          this.state.currentPage === 1
+            ? allClubs.map((club, i) =>
+              <View key={i}>
+                <ClubItem key={i} club={club} isNotMyClub onClick={this.navigate("/pages/clubs/detail?clubId=${club.id}")} />
+              </View>
             )
             : null
         }

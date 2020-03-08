@@ -1,17 +1,19 @@
 import Taro, {Component, Config} from "@tarojs/taro";
 import {View} from "@tarojs/components";
+import {connect} from "@tarojs/redux";
 import {ComponentClass} from "react";
 import {AtAvatar, AtButton, AtCard, AtList, AtListItem} from "taro-ui";
+import {getClubDetail} from "./store/actions/clubs.action";
 import "./detail.scss";
-import {ClubList} from "./model/clubs";
+import {ClubDetail} from "./model/clubs";
 
 type PageStateProps = {
   clubs: {
-    clubs: ClubList
+    clubDetail: ClubDetail
   }
 };
 type PageDispatchProps = {
-  getClubs: () => void
+  getClubDetail: (id) => void
 };
 type PageOwnProps = {};
 type PageState = {
@@ -23,38 +25,21 @@ interface Detail {
   props: IProps
 }
 
+
+@connect(
+  ({clubs}) => ({
+    clubs
+  }),
+  dispatch => ({
+    getClubDetail(id) {
+      dispatch(getClubDetail(id));
+    }
+  })
+)
 class Detail extends Component {
 
   config: Config = {
-    navigationBarTitleText: "详情"
-  };
-
-  users = [
-    {
-      id: 1,
-      photo: "jun_li",
-      displayName: "Jun Li"
-    }, {
-      id: 1,
-      photo: "hao_lin",
-      displayName: "Hao Lin"
-    }, {
-      id: 1,
-      photo: "jiaxin_li",
-      displayName: "Jiaxin Li"
-    }, {
-      id: 1,
-      photo: "jiawei_chen",
-      displayName: "Jiawei Chen"
-    },
-  ];
-
-  baseInfo = {
-    // 俱乐部名称、定位、创建时间、简介
-    name: "篮球俱乐部",
-    type: "运动",
-    createDate: "2020-3-6",
-    introduction: "篮球是中国青少年最喜爱的体育运动之一,中国有着不错的的篮球迷数量，他们关注篮球，并投身到火热的篮球场上去，亲身体验篮球运动带来的快乐，尤其是广大青少年朋友，更是篮球运动的爱好者，因此，篮球在我们国家有着良好的青少年群众基础。"
+    navigationBarTitleText: "俱乐部详情"
   };
 
   navigate = url => () => {
@@ -77,11 +62,17 @@ class Detail extends Component {
     isManager: true
   };
 
+  componentWillMount(): void {
+    this.props.getClubDetail(parseInt(this.$router.params['clubId']))
+  }
+
 
   render() {
+    const detail = this.props.clubs.clubDetail;
+    console.log(detail);
     return (
       <View className='detail-container'>
-        <Image className='at-row' src={require('./../../assets/images/club/clubBackground.jpg')} />
+        <Image className='at-row' src={require(`./../../assets/images/club/${detail.picture}.jpg`)} />
 
         <View>
           <AtButton type='secondary'
@@ -89,8 +80,8 @@ class Detail extends Component {
           >{this.state.isManager ? '我是管理员' : '我是普通会员'}</AtButton>
         </View>
         <AtCard className='base-info'
-          title={this.baseInfo.name}
-          thumb={require('./../../assets/images/club/avatar.jpg')}
+          title={detail.name}
+          // thumb={require(`./../../assets/images/club/${detail.photo}.jpg`)}
           extra={this.state.isManager ? '编辑' : ''}
           onClick={() => {
                   console.log("编辑");
@@ -103,16 +94,16 @@ class Detail extends Component {
               <View className='text' style='align-self: center;'>
                 <AtButton type='secondary' customStyle='height: 20px; padding-top:0; line-height: 40rpx;'
                   size='small'
-                >{this.baseInfo.type}</AtButton>
+                >{detail.type}</AtButton>
               </View>
             </View>
             <View className='text-wrapper'>
               <View className='label'>创建时间：</View>
-              <View className='text'>{this.baseInfo.createDate}</View>
+              <View className='text'>{detail.createDate}</View>
             </View>
             <View className='text-wrapper'>
               <View className='label'>简介：</View>
-              <View className='text'>{this.baseInfo.introduction}</View>
+              <View className='text'>{detail.introduction}</View>
             </View>
 
           </View>
@@ -126,7 +117,7 @@ class Detail extends Component {
           onClick={this.navigate("/pages/clubs/users")}
         >
           <View className='users'>
-            {this.users.map((user, i) => this.User(user, i))}
+            {detail.users ? detail.users.map((user, i) => this.User(user, i)) : '还没有会员'}
           </View>
         </AtCard>
 

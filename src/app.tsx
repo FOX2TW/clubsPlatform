@@ -6,7 +6,7 @@ import User from "./pages/user";
 import configStore from "./store";
 
 import "./app.scss";
-import "@assets/font/iconfont.css";
+import "@/assets/font/iconfont.css";
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
@@ -31,6 +31,7 @@ class App extends Component {
       "pages/clubs/detail",
       "pages/clubs/users",
       "pages/clubs/edit",
+      "pages/clubs/form",
       "pages/user/index",
       "pages/activity/index",
       "pages/user/setting",

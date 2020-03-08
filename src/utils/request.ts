@@ -1,6 +1,6 @@
 import Taro from "@tarojs/taro";
 
-const HOST = "http://localhost:8080";
+const HOST = "http://murrayee.com:8080";
 
 type Methods = "POST" | "GET" | "OPTIONS" | "PUT" | "DELETE";
 

@@ -37,15 +37,17 @@ const config = {
     ]
   },
   alias: {
-    "@components": path.resolve(__dirname, "..", "src/components"),
-    "@utils": path.resolve(__dirname, "..", "src/utils"),
-    "@images": path.resolve(__dirname, "..", "src/assets/images"),
-    "@pages": path.resolve(__dirname, "..", "src/pages"),
-    "@actions": path.resolve(__dirname, "..", "src/actions"),
-    "@reducers": path.resolve(__dirname, "..", "src/reducers"),
-    "@constants": path.resolve(__dirname, "..", "src/constants"),
-    "@styles": path.resolve(__dirname, "..", "src/styles"),
-    "@assets": path.resolve(__dirname, "..", "src/assets")
+    "@/components": path.resolve(__dirname, "..", "src/components"),
+    "@/utils": path.resolve(__dirname, "..", "src/utils"),
+    "@/images": path.resolve(__dirname, "..", "src/assets/images"),
+    "@/pages": path.resolve(__dirname, "..", "src/pages"),
+    "@/actions": path.resolve(__dirname, "..", "src/actions"),
+    "@/reducers": path.resolve(__dirname, "..", "src/reducers"),
+    "@/constants": path.resolve(__dirname, "..", "src/constants"),
+    "@/styles": path.resolve(__dirname, "..", "src/styles"),
+    "@/assets": path.resolve(__dirname, "..", "src/assets"),
+    "@/services": path.resolve(__dirname, "..", "src/services"),
+    "@/types": path.resolve(__dirname, "..", "src/types")
   },
   defineConstants: {},
   mini: {

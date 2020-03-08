@@ -2,9 +2,6 @@ import { ComponentClass } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
 import { View, Button, Text } from "@tarojs/components";
 import { AtIcon } from "taro-ui";
-import { connect } from "@tarojs/redux";
-
-import { add, minus, asyncAdd } from "../../actions/counter";
 
 import "./index.scss";
 
@@ -14,11 +11,7 @@ type PageStateProps = {
   };
 };
 
-type PageDispatchProps = {
-  add: () => void;
-  dec: () => void;
-  asyncAdd: () => any;
-};
+type PageDispatchProps = {};
 
 type PageOwnProps = {};
 
@@ -30,22 +23,6 @@ interface Home {
   props: IProps;
 }
 
-@connect(
-  ({ counter }) => ({
-    counter
-  }),
-  dispatch => ({
-    add() {
-      dispatch(add());
-    },
-    dec() {
-      dispatch(minus());
-    },
-    asyncAdd() {
-      dispatch(asyncAdd());
-    }
-  })
-)
 class Home extends Component {
   /**
    * 指定config的类型声明为: Taro.Config
@@ -72,26 +49,6 @@ class Home extends Component {
   render() {
     return (
       <View className="index">
-        <AtIcon value="clock" size="30" color="#F00"></AtIcon>
-        <AtIcon
-          prefixClass="icon"
-          value="shouye"
-          size="30"
-          color="#F00"
-        ></AtIcon>
-
-        <Button className="add_btn" onClick={this.props.add}>
-          + 123
-        </Button>
-        <Button className="dec_btn" onClick={this.props.dec}>
-          -
-        </Button>
-        <Button className="dec_btn" onClick={this.props.asyncAdd}>
-          async
-        </Button>
-        <View>
-          <Text>{this.props.counter.num}</Text>
-        </View>
         <View>
           <Text>主页</Text>
         </View>

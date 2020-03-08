@@ -4,8 +4,6 @@ import { View, Button, Text } from "@tarojs/components";
 import { AtIcon } from "taro-ui";
 import { connect } from "@tarojs/redux";
 
-import { add, minus, asyncAdd } from "../../actions/counter";
-
 import "./index.scss";
 
 type PageStateProps = {
@@ -14,11 +12,7 @@ type PageStateProps = {
   };
 };
 
-type PageDispatchProps = {
-  add: () => void;
-  dec: () => void;
-  asyncAdd: () => any;
-};
+type PageDispatchProps = {};
 
 type PageOwnProps = {};
 
@@ -30,22 +24,6 @@ interface Home {
   props: IProps;
 }
 
-@connect(
-  ({ counter }) => ({
-    counter
-  }),
-  dispatch => ({
-    add() {
-      dispatch(add());
-    },
-    dec() {
-      dispatch(minus());
-    },
-    asyncAdd() {
-      dispatch(asyncAdd());
-    }
-  })
-)
 class Home extends Component {
   /**
    * 指定config的类型声明为: Taro.Config

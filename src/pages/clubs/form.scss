@@ -1,0 +1,99 @@
+.club-form-container {
+  background: #fff;
+  padding: 40px;
+  margin: 0 20px;
+  margin-top: 20px;
+
+  .at-form::after {
+    border: none;
+  }
+
+  .form-item {
+    margin-bottom: 40px;
+
+    .at-input {
+      margin-left: 0px;
+      padding: 0 20px;
+      line-height: 80px;
+      display: flex;
+      align-items: center;
+      height: 75px;
+
+      &::after {
+        border: 1px solid #d6e4ef;
+        border-radius: 10px;
+      }
+
+      input {
+        font-size: 28px;
+      }
+    }
+
+    .at-textarea {
+      textarea {
+        font-size: 28px;
+        color: #333;
+      }
+
+    }
+
+    .label-wrap {
+      display: flex;
+      align-items: center;
+      height: 80px;
+
+      .required {
+        color: red;
+        font-size: 20px;
+        padding-right: 10px;
+      }
+
+      .label {
+        font-size: 28px;
+        height: 60px;
+        line-height: 60px;
+        color: #333;
+      }
+    }
+
+    .select-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      at-input {
+        flex: 1;
+      }
+
+      .at-switch {
+        margin: 0;
+        padding: 0;
+        margin-left: 30px;
+
+        .at-switch__title {
+          color: #666;
+          padding-right: 5px;
+        }
+      }
+
+      .select {
+        display: flex;
+        align-items: center;
+        height: 75px;
+        border: 0.5px solid #d6e4ef;
+        flex: 1;
+        justify-content: space-between;
+        font-size: 28px;
+        padding: 0 20px;
+        color: #cdcdcd;
+        border-radius: 10px;
+
+        .select-value {
+          color: #333;
+        }
+      }
+    }
+
+  }
+
+}

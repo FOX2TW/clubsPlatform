@@ -84,7 +84,10 @@ class User extends Component {
                 <AtIcon value="chevron-right" size="20" color="#c8c8c8" />
               </Button>
             </View>
-            <Button className="item extra">
+            <Button
+              className="item extra"
+              onClick={this.navigate("/pages/clubs/form")}
+            >
               <Text>创建俱乐部</Text>
               <AtIcon value="chevron-right" size="20" color="#c8c8c8" />
             </Button>

@@ -62,7 +62,6 @@ class Detail extends Component {
   componentWillMount(): void {
     this.props.getClubDetail(parseInt(this.$router.params["clubId"]));
     this.props.getClubType();
-    this.setState({isManager: this.props.clubDetail.isManager})
   }
 
   render() {
@@ -70,7 +69,7 @@ class Detail extends Component {
     const types = this.props.types.reduce((a,b) => {return {...a, [b.id]: b.name}}, {});
     const isManager = this.$router.params["isManager"];
     const isJoin = this.$router.params["isJoin"];
-    console.log(detail);
+    console.log("isManager:",isManager,"   isJoin:",isJoin);
     return (
       <View className="detail-container">
         <Image
@@ -82,8 +81,8 @@ class Detail extends Component {
           className="base-info"
           title={detail.name}
           // thumb={require(`./../../assets/images/club/${detail.photo}.jpg`)}
-          extra={isManager ? "编辑" : ""}
-          onClick={() => isManager && Taro.navigateTo({ url: "/pages/clubs/edit" })}
+          extra={isManager=="true" ? "编辑" : ""}
+          onClick={() => isManager=="true" && Taro.navigateTo({ url: "/pages/clubs/edit" })}
         >
           <View className="info-list">
             <View className="text-wrapper">
@@ -122,7 +121,7 @@ class Detail extends Component {
           onClick={this.navigate(`/pages/clubs/users?isManager=${isManager}`)}
         >
           <View className="users">
-            {detail.members
+            {detail.members && detail.members.length > 0
               ? detail.members.map(user => this.User(user))
               : "还没有会员"}
           </View>

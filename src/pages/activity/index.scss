@@ -5,16 +5,136 @@
 
   .header-wrapper {
     position: relative;
-    height: 500px;
+    height: 350px;
     background: linear-gradient(to bottom, #6190E8, #6193E5);
 
     .img {
       position: absolute;
-      // width: 100px;
+      width: 250px;
+      height: 230px;
       right: 50px;
-      bottom: 50px;
-
+      bottom: 20px;
+      transform: rotate(20deg);
 
     }
+
+    .shadow {
+      height: 25px;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      position: absolute;
+      bottom: 0;
+    }
+
+    .day-info-wrap {
+      padding-left: 30px;
+      display: flex;
+      flex-direction: column;
+
+      .date {
+        color: #fff;
+        font-size: 50px;
+        font-weight: 700;
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          bottom: -10px;
+          width: 30px;
+          height: 4px;
+          background-color: rgba(255, 255, 255, 0.6);
+
+        }
+
+        margin-bottom: 50px;
+      }
+
+      .day,
+      .wether {
+        font-size: 28px;
+        color: rgba(255, 255, 255, 0.8);
+      }
+    }
+  }
+
+  .list {
+    padding: 20px;
+
+    .card {
+      background: white;
+      border-radius: 10px;
+
+
+      .card-head {
+        height: 80px;
+        border-bottom: 1px solid #f1f1f1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+
+        .text {
+          color: rgb(38, 54, 73);
+        }
+
+        .extra {
+          color: #6190E8;
+          font-size: 28px;
+        }
+      }
+
+      .content {
+        display: flex;
+        color: rgba(0, 0, 0, 0.6);
+        padding: 0 30px;
+
+        .intro {
+          display: flex;
+          flex-direction: column;
+          padding: 30px 0;
+          font-size: 28px;
+
+          .name {
+            padding-bottom: 20px;
+          }
+
+          .date-wrap {
+            display: flex;
+            align-items: center;
+          }
+        }
+
+        .handle {
+          display: flex;
+          align-items: center;
+          width: 400px;
+          justify-content: flex-end;
+
+          .at-button {
+            height: auto;
+            padding: 0;
+            line-height: 1;
+            padding: 15px 15px;
+            font-size: 24px
+          }
+        }
+      }
+
+      .bottom {
+        display: flex;
+        font-size: 24px;
+        color: rgba(0, 0, 0, 0.5);
+        justify-content: space-between;
+        background-color: rgb(248, 249, 251);
+        padding: 0 30px;
+        padding-right: 10px;
+        height: 70px;
+        align-items: center;
+
+      }
+    }
+
   }
 }

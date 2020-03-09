@@ -46,18 +46,10 @@ export default async function fetch(url: string, options?: Options) {
     newOptions.method === "PUT" ||
     newOptions.method === "DELETE"
   ) {
-    if (!(newOptions.data instanceof FormData)) {
-      newOptions.header = {
-        Accept: "application/json",
-        ...newOptions.header,
-        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
-      };
-    } else {
-      newOptions.header = {
-        Accept: "application/json",
-        ...newOptions.header
-      };
-    }
+    newOptions.header = {
+      Accept: "application/json",
+      ...newOptions.header
+    };
   }
   return Taro.request({
     url: `${HOST}${url}`,

@@ -2,4 +2,19 @@
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
+
+  .header-wrapper {
+    position: relative;
+    height: 500px;
+    background: linear-gradient(to bottom, #6190E8, #6193E5);
+
+    .img {
+      position: absolute;
+      // width: 100px;
+      right: 50px;
+      bottom: 50px;
+
+
+    }
+  }
 }

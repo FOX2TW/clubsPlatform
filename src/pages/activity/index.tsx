@@ -1,6 +1,6 @@
 import { ComponentClass } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
-import { View, Button, Text } from "@tarojs/components";
+import { View, Button, Text, Image } from "@tarojs/components";
 import { AtIcon } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { bindActionCreators } from "redux";
@@ -31,13 +31,19 @@ interface Activity {
 )
 class Activity extends Component {
   config: Config = {
-    navigationBarTitleText: "活动"
+    navigationBarTitleText: "活动",
+    navigationBarBackgroundColor: "#6190E8",
+    navigationBarTextStyle: "white"
+    // enablePullDownRefresh: true
   };
 
   render() {
     return (
       <View className="activity-container">
-        <View></View>
+        <View className="header-wrapper">
+          <Image className="img" src={require("@/images/header-bg.png")} />
+          <View className="shadow" />
+        </View>
       </View>
     );
   }

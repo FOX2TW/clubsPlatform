@@ -5,7 +5,7 @@ import { ComponentClass } from "react";
 import { AtAvatar, AtButton, AtCard, AtList, AtListItem } from "taro-ui";
 import { getClubDetail } from "@/actions/clubs";
 import "./detail.scss";
-import { ClubDetail } from "@/types";
+import { ClubDetail } from "@/types/index";
 
 type PageStateProps = {
   clubs: {

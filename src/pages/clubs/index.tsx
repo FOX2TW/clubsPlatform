@@ -4,7 +4,7 @@ import { View } from "@tarojs/components";
 import { AtSegmentedControl } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { getClubs } from "@/actions/clubs";
-import { ClubList } from "@/types";
+import { ClubList } from "@/types/index";
 import ClubItem from "@/components/ClubItem";
 
 import "./index.scss";

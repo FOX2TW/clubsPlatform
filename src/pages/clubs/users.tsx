@@ -56,7 +56,7 @@ class Users extends Component {
               {/* <AtAvatar image={require(`./../../assets/images/user/${user.photo}.png`)} circle/> */}
             </View>
             <View className="user-name">{user.displayName}</View>
-            {this.isManager ? (
+            {this.isManager && (
               <View className="action">
                 <AtButton
                   type="secondary"
@@ -66,7 +66,7 @@ class Users extends Component {
                   踢出
                 </AtButton>
               </View>
-            ) : null}
+            )}
           </View>
         ))}
       </View>

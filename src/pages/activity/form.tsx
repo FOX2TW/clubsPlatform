@@ -15,7 +15,7 @@ import {
 } from "taro-ui";
 import cls from "classnames";
 import { find } from "lodash";
-import { ClubList, Activity, Club } from "@/types";
+import { ClubList, Activity, Club } from "@/types/index";
 import { createActivity } from "@/actions/activity";
 
 import "./form.scss";

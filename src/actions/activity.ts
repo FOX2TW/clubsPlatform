@@ -1,6 +1,6 @@
 import * as activityService from "@/services/activity";
-import { CREATE_ACTIVITY } from "@/constants";
-import { Activity } from "@/types";
+import { CREATE_ACTIVITY } from "@/constants/index";
+import { Activity } from "@/types/index";
 
 export function createActivity(data: Activity) {
   return dispatch =>

@@ -30,7 +30,6 @@ class App extends Component {
       "pages/clubs/index",
       "pages/clubs/detail",
       "pages/clubs/users",
-      "pages/clubs/edit",
       "pages/clubs/form",
       "pages/clubs/choose",
       "pages/user/index",

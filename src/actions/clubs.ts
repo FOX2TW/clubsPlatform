@@ -5,9 +5,9 @@ import {
   GET_CLUBS,
   EDIT_CLUB,
   GET_MY_CLUBS
-} from "@/constants";
+} from "@/constants/index";
 
-import { Club, ClubList, ClubTypes } from "@/types";
+import { Club, ClubList, ClubTypes } from "@/types/index";
 
 export const getClubTypes = () => {
   return dispatch =>

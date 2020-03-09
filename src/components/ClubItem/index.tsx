@@ -2,7 +2,7 @@ import Taro, { Component, Config } from "@tarojs/taro";
 import { Text, View } from "@tarojs/components";
 import { ComponentClass } from "react";
 import { AtAvatar, AtTag } from "taro-ui";
-import { Club } from "@/types";
+import { Club } from "@/types/index";
 
 import "./index.scss";
 
@@ -49,7 +49,7 @@ class ClubItem extends Component {
                   已加入
                 </AtTag>
               ) : null}
-              {club.isManager ? (
+              {club.isManager && (
                 <AtTag
                   className="tag"
                   size="small"
@@ -60,7 +60,7 @@ class ClubItem extends Component {
                 >
                   管理员
                 </AtTag>
-              ) : null}
+              )}
             </View>
           </View>
           <View className="bottom">

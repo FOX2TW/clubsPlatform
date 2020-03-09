@@ -72,7 +72,7 @@ class Detail extends Component {
       <View className="detail-container">
         <Image
           className="at-row"
-          src={require(`./../../assets/images/club/${detail.picture}.jpg`)}
+          src={detail.picture}
         />
 
         <View>

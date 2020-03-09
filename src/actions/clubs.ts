@@ -4,7 +4,7 @@ import {
   GET_CLUB_DETAIL,
   GET_CLUBS,
   EDIT_CLUB,
-  GET_MY_CLUBS
+  GET_MY_CLUBS, CREATE_CLUB
 } from "@/constants/index";
 
 import { Club, ClubList, ClubTypes } from "@/types/index";
@@ -44,6 +44,17 @@ export function editClub(clubDetail: Club) {
     type: EDIT_CLUB,
     clubDetail: clubDetail
   };
+}
+
+export function createClub(club: Club) {
+  console.log(club)
+
+  return dispatch =>
+    clubServices.fetchCreateClub(club).then(res =>
+      dispatch({
+        type: CREATE_CLUB
+      })
+    );
 }
 
 export function getMyclubs(userId: number) {

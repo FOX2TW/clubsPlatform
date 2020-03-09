@@ -3,8 +3,8 @@ import {
   EDIT_CLUB,
   GET_CLUB_DETAIL,
   GET_CLUBS,
-  GET_MY_CLUBS
-} from "@/constants";
+  GET_MY_CLUBS, CREATE_CLUB
+} from "@/constants/index";
 
 const INITIAL_STATE = {
   types: [],

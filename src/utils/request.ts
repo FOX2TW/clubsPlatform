@@ -37,7 +37,11 @@ const checkStatus = response => {
  */
 export default async function fetch(url: string, options?: Options) {
   const defaultOptions = {
-    method: "GET"
+    method: "GET",
+    //mock userId
+    header: {
+      accessId: 1
+    }
   };
   const newOptions = { ...defaultOptions, ...options } as Options;
 

@@ -1,23 +1,23 @@
-import { ComponentClass } from "react";
-import Taro, { Component, Config } from "@tarojs/taro";
-import { connect } from "@tarojs/redux";
-import { bindActionCreators } from "redux";
-import { View, Text } from "@tarojs/components";
+import {ComponentClass} from "react";
+import Taro, {Component, Config} from "@tarojs/taro";
+import {connect} from "@tarojs/redux";
+import {bindActionCreators} from "redux";
+import {Text, View} from "@tarojs/components";
 
 import {
-  AtForm,
-  AtInput,
-  AtButton,
-  AtImagePicker,
   AtActionSheet,
   AtActionSheetItem,
-  AtTextarea,
+  AtButton,
+  AtForm,
   AtIcon,
-  AtSwitch
+  AtImagePicker,
+  AtInput,
+  AtSwitch,
+  AtTextarea
 } from "taro-ui";
 import cls from "classnames";
-import { ClubTypes } from "@/types";
-import { getClubTypes } from "@/actions/clubs";
+import {Club, ClubTypes} from "@/types/index";
+import {createClub, getClubTypes} from "@/actions/clubs";
 
 import "./form.scss";
 
@@ -26,6 +26,7 @@ type PageStateProps = {
 };
 type PageDispatchProps = {
   getClubTypes: () => void;
+  createClub: (club: Club) => void;
 };
 type PageOwnProps = {};
 type PageState = {};
@@ -41,7 +42,7 @@ interface ClubForm {
   dispatch =>
     bindActionCreators(
       {
-        getClubTypes
+        getClubTypes, createClub
       },
       dispatch
     )
@@ -56,7 +57,7 @@ class ClubForm extends Component {
     isOpenType: false,
     picture: "",
     name: "",
-    type: "",
+    type: {},
     introduction: "",
     address: "",
     files: []
@@ -66,7 +67,14 @@ class ClubForm extends Component {
     this.props.getClubTypes();
   }
 
-  onSubmit = () => {};
+  onSubmit = () => {
+    this.props.createClub({
+    picture: this.state.picture,
+    name: this.state.name,
+    type: this.state.type.id,
+    introduction: this.state.introduction,
+    })
+  };
   nameInputChange = name => {
     this.setState({ name });
   };
@@ -80,7 +88,7 @@ class ClubForm extends Component {
   };
 
   typeInputChange = type => {
-    this.setState({ type });
+    this.setState({type: {name: type}});
   };
 
   openTypeActionSheet = () => {
@@ -155,8 +163,8 @@ class ClubForm extends Component {
             <View className="select-wrap">
               {isUseDefault && (
                 <View className="select" onClick={this.openTypeActionSheet}>
-                  <Text className={cls({ "select-value": !!type })}>
-                    {!!type ? type : "请选择类型"}
+                  <Text className={cls({ "select-value": !!type.name })}>
+                    {!!type.name ? type.name : "请选择类型"}
                   </Text>
                   <AtIcon value="chevron-down" size="24" color="#cdcdcd" />
                 </View>
@@ -166,7 +174,7 @@ class ClubForm extends Component {
                   name="value"
                   type="text"
                   placeholder="请输入类型"
-                  value={type}
+                  value={type.name}
                   onChange={this.typeInputChange}
                 />
               )}
@@ -188,7 +196,7 @@ class ClubForm extends Component {
               {types.map(item => (
                 <AtActionSheetItem
                   key={item.id}
-                  onClick={this.actionSheetItemClick(item.name)}
+                  onClick={this.actionSheetItemClick(item)}
                 >
                   {item.name}
                 </AtActionSheetItem>

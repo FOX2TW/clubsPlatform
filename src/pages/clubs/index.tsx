@@ -4,16 +4,15 @@ import { View } from "@tarojs/components";
 import { AtSegmentedControl } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { getClubs } from "@/actions/clubs";
-import { ClubList } from "@/types/index";
+import {ClubList, ClubTypes} from "@/types/index";
 import ClubItem from "@/components/ClubItem";
 
 import "./index.scss";
 
 type PageStateProps = {
   currentUserId: number;
-  clubs: {
-    clubs: ClubList;
-  };
+  clubs: ClubList;
+  types: ClubTypes;
 };
 type PageDispatchProps = {
   getClubs: () => void;
@@ -30,7 +29,8 @@ interface Clubs {
 
 @connect(
   ({ clubs }) => ({
-    clubs
+    clubs: clubs.clubs,
+    types: clubs.types
   }),
   dispatch => ({
     getClubs() {
@@ -62,7 +62,7 @@ class Clubs extends Component {
   }
 
   render() {
-    const allClubs = this.props.clubs.clubs;
+    const allClubs = this.props.clubs;
     return (
       <View className="index">
         <AtSegmentedControl
@@ -94,7 +94,7 @@ class Clubs extends Component {
               <ClubItem
                 club={club}
                 isNotMyClub
-                onClick={this.navigate("/pages/clubs/detail?clubId=${club.id}")}
+                onClick={this.navigate(`/pages/clubs/detail?clubId=${club.id}`)}
               />
             </View>
           ))}

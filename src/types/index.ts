@@ -1,13 +1,14 @@
 export interface Club {
-  id: number;
+  id?: number;
   picture: string;
   photo?: string;
   name: string;
-  type: string;
-  isManager: boolean;
-  isJoin: boolean;
+  type: number;
+  isManager?: boolean;
+  isJoin?: boolean;
   introduction: string;
-  createDate: string;
+  createDate?: string;
+  address?: string;
 }
 
 export interface ClubDetail extends Club {

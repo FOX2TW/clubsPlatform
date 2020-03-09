@@ -12,7 +12,6 @@ import "./index.scss";
 type PageStateProps = {
   currentUserId: number;
   clubs: ClubList;
-  types: ClubTypes;
 };
 type PageDispatchProps = {
   getClubs: () => void;
@@ -30,7 +29,6 @@ interface Clubs {
 @connect(
   ({ clubs }) => ({
     clubs: clubs.clubs,
-    types: clubs.types
   }),
   dispatch => ({
     getClubs() {
@@ -81,7 +79,7 @@ class Clubs extends Component {
                     club={club}
                     isNotMyClub={false}
                     onClick={this.navigate(
-                      `/pages/clubs/detail?clubId=${club.id}`
+                      `/pages/clubs/detail?clubId=${club.id}&isManager=${club.isManager}&isJoin=${club.isJoin}`
                     )}
                   />
                 </View>
@@ -94,7 +92,7 @@ class Clubs extends Component {
               <ClubItem
                 club={club}
                 isNotMyClub
-                onClick={this.navigate(`/pages/clubs/detail?clubId=${club.id}`)}
+                onClick={this.navigate(`/pages/clubs/detail?clubId=${club.id}&isManager=${club.isManager}&isJoin=${club.isJoin}`)}
               />
             </View>
           ))}

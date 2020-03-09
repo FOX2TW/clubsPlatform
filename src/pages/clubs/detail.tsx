@@ -3,22 +3,20 @@ import { View, Image } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import { ComponentClass } from "react";
 import { AtAvatar, AtButton, AtCard, AtList, AtListItem } from "taro-ui";
-import { getClubDetail } from "@/actions/clubs";
+import {getClubDetail, getClubTypes} from "@/actions/clubs";
 import "./detail.scss";
-import { ClubDetail } from "@/types/index";
+import {ClubDetail, ClubTypes} from "@/types/index";
 
 type PageStateProps = {
-  clubs: {
     clubDetail: ClubDetail;
-  };
+    types: ClubTypes;
 };
 type PageDispatchProps = {
   getClubDetail: (id) => void;
+  getClubType: () => void;
 };
 type PageOwnProps = {};
-type PageState = {
-  isManager: boolean;
-};
+type PageState = {};
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
 interface Detail {
@@ -27,11 +25,15 @@ interface Detail {
 
 @connect(
   ({ clubs }) => ({
-    clubs
+    clubDetail: clubs.clubDetail,
+    types: clubs.types
   }),
   dispatch => ({
     getClubDetail(id) {
       dispatch(getClubDetail(id));
+    },
+    getClubType(){
+      dispatch(getClubTypes())
     }
   })
 )
@@ -50,23 +52,24 @@ class Detail extends Component {
         {/* <AtAvatar
           className="avatar"
           circle
-          image={require(`./../../assets/images/user/${user.photo}.png`)}
-        /> */}
-        <View className="name">{user.displayName}</View>
+          image={user.profileImagePath}
+        />*/}
+        <View className="name">{user.username}</View>
       </View>
     );
   }
 
-  state = {
-    isManager: true
-  };
-
   componentWillMount(): void {
     this.props.getClubDetail(parseInt(this.$router.params["clubId"]));
+    this.props.getClubType();
+    this.setState({isManager: this.props.clubDetail.isManager})
   }
 
   render() {
-    const detail = this.props.clubs.clubDetail;
+    const detail = this.props.clubDetail;
+    const types = this.props.types.reduce((a,b) => {return {...a, [b.id]: b.name}}, {});
+    const isManager = this.$router.params["isManager"];
+    const isJoin = this.$router.params["isJoin"];
     console.log(detail);
     return (
       <View className="detail-container">
@@ -75,25 +78,12 @@ class Detail extends Component {
           src={detail.picture}
         />
 
-        <View>
-          <AtButton
-            type="secondary"
-            onClick={() => this.setState({ isManager: !this.state.isManager })}
-          >
-            {this.state.isManager ? "我是管理员" : "我是普通会员"}
-          </AtButton>
-        </View>
         <AtCard
           className="base-info"
           title={detail.name}
           // thumb={require(`./../../assets/images/club/${detail.photo}.jpg`)}
-          extra={this.state.isManager ? "编辑" : ""}
-          onClick={() => {
-            console.log("编辑");
-            this.state.isManager
-              ? Taro.navigateTo({ url: "/pages/clubs/edit" })
-              : null;
-          }}
+          extra={isManager ? "编辑" : ""}
+          onClick={() => isManager && Taro.navigateTo({ url: "/pages/clubs/edit" })}
         >
           <View className="info-list">
             <View className="text-wrapper">
@@ -106,7 +96,7 @@ class Detail extends Component {
                   customStyle="height: 20px; padding-top:0; line-height: 40rpx;"
                   size="small"
                 >
-                  {detail.type}
+                  {types[detail.type]}
                 </AtButton>
               </View>
             </View>
@@ -114,6 +104,10 @@ class Detail extends Component {
               <View className="label">创建时间：</View>
               <View className="text">{detail.createDate}</View>
             </View>
+            {detail.address && <View className="text-wrapper">
+              <View className="label">地址：</View>
+              <View className="text">{detail.address}</View>
+            </View>}
             <View className="text-wrapper">
               <View className="label">简介：</View>
               <View className="text">{detail.introduction}</View>
@@ -125,11 +119,11 @@ class Detail extends Component {
           title="会员"
           extra="所有会员"
           // thumb={require('./../../assets/images/club/avatar.jpg')}
-          onClick={this.navigate("/pages/clubs/users")}
+          onClick={this.navigate(`/pages/clubs/users?isManager=${isManager}`)}
         >
           <View className="users">
-            {detail.users
-              ? detail.users.map(user => this.User(user))
+            {detail.members
+              ? detail.members.map(user => this.User(user))
               : "还没有会员"}
           </View>
         </AtCard>

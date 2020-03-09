@@ -1,15 +1,12 @@
 import Taro, { Component, Config } from "@tarojs/taro";
 import { View } from "@tarojs/components";
 import { ComponentClass } from "react";
-import { AtAvatar, AtButton } from "taro-ui";
+import { AtButton } from "taro-ui";
 import "./users.scss";
 
 type PageStateProps = {};
 type PageDispatchProps = {};
-type PageOwnProps = {
-  // users: Array<User>
-  isManager: boolean;
-};
+type PageOwnProps = {};
 type PageState = {};
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
@@ -45,9 +42,8 @@ class Users extends Component {
     }
   ];
 
-  isManager = true;
-
   render() {
+    const isManager = this.$router.params["isManager"];
     return (
       <View className="users-container">
         {this.users.map(user => (
@@ -56,7 +52,7 @@ class Users extends Component {
               {/* <AtAvatar image={require(`./../../assets/images/user/${user.photo}.png`)} circle/> */}
             </View>
             <View className="user-name">{user.displayName}</View>
-            {this.isManager && (
+            {isManager && (
               <View className="action">
                 <AtButton
                   type="secondary"

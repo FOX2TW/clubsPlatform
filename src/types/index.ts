@@ -12,18 +12,20 @@ export interface Club {
 }
 
 export interface ClubDetail extends Club {
-  users: Array<User>;
+  members: Array<User>;
 }
 
 export type ClubList = Array<Club>;
 
 export interface User {
   id: number;
-  photo: string;
-  displayName: string;
+  profileImagePath?: string;
   weChatNO?: string;
   cellphone?: string;
   address?: string;
+  status?: number,
+  phone?: string,
+  username: string
 }
 
 export interface ClubType {

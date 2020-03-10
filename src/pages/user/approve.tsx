@@ -4,9 +4,18 @@ import { View, Text, Button } from "@tarojs/components";
 import dayjs from "dayjs";
 import { AtIcon } from "taro-ui";
 import "./approve.scss";
+import {connect} from "@tarojs/redux";
+import {getClubApprove, getJoinClubApprove} from "@/actions/clubs";
+import {ClubApprove, JoinClubApprove} from "@/types/index";
 
-type PageStateProps = {};
-type PageDispatchProps = {};
+type PageStateProps = {
+  clubApprove: Array<ClubApprove>
+  joinClubApprove: Array<JoinClubApprove>
+};
+type PageDispatchProps = {
+  getClubApprove: () => void
+  getJoinClubApprove: () => void
+};
 type PageOwnProps = {};
 type PageState = {};
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
@@ -14,38 +23,28 @@ interface Approve {
   props: IProps;
 }
 
+@connect(
+  ({ clubs }) => ({
+    clubApprove: clubs.clubApprove,
+    joinClubApprove: clubs.joinClubApprove
+  }),dispatch => ({
+    getClubApprove(){
+      dispatch(getClubApprove())
+    },
+    getJoinClubApprove(){
+      dispatch(getJoinClubApprove())
+    }
+  })
+)
 class Approve extends Component {
   config: Config = {
     navigationBarTitleText: "我的审批"
   };
 
-  state = {
-    list: [
-      {
-        type: 1,
-        id: "1",
-        approve_menber: "Bob",
-        clubs: {
-          id: "11",
-          name: "足球俱乐部",
-          description:
-            "力争软甲冠军,替代中超，进军欧冠,力争软甲冠军,替代中超，进军欧冠"
-        },
-        date: 1583461237040
-      },
-      {
-        type: 2,
-        id: "2",
-        approve_menber: "迪丽热巴",
-        reson: "能歌善舞又漂亮",
-        date: 1583461237040,
-        clubs: {
-          id: "222",
-          name: "羽毛球俱乐部"
-        }
-      }
-    ]
-  };
+  componentWillMount(): void {
+    this.props.getClubApprove();
+    this.props.getJoinClubApprove()
+  }
 
   renderClubApproveCard = item => {
     return (
@@ -60,20 +59,20 @@ class Approve extends Component {
             />
             <Text className="title">俱乐部创建</Text>
           </View>
-          <Text className="extra">{dayjs(item.date).format("YYYY-MM-DD")}</Text>
+          <Text className="extra">{item.applyDate}</Text>
         </View>
         <View className="card-content">
           <View className="text-wrapper">
             <Text className="label">创建人：</Text>
-            <Text className="text">{item.approve_menber}</Text>
+            <Text className="text">{item.creatorName}</Text>
           </View>
           <View className="text-wrapper">
             <Text className="label">俱乐部名称：</Text>
-            <Text className="text">{item.clubs.name}</Text>
+            <Text className="text">{item.name}</Text>
           </View>
           <View className="text-wrapper">
             <Text className="label">俱乐部描述：</Text>
-            <Text className="text">{item.clubs.description}</Text>
+            <Text className="text">{item.introduction}</Text>
           </View>
         </View>
         <View className="card-actions">
@@ -97,16 +96,16 @@ class Approve extends Component {
             />
             <Text className="title">会员加入</Text>
           </View>
-          <Text className="extra">{dayjs(item.date).format("YYYY-MM-DD")}</Text>
+          <Text className="extra">{item.applyDate}</Text>
         </View>
         <View className="card-content">
           <View className="text-wrapper">
             <Text className="label">申请人：</Text>
-            <Text className="text">{item.approve_menber}</Text>
+            <Text className="text">{item.applicantName}</Text>
           </View>
           <View className="text-wrapper">
             <Text className="label">申请俱乐部：</Text>
-            <Text className="text">{item.clubs.name}</Text>
+            <Text className="text">{item.clubName}</Text>
           </View>
           <View className="text-wrapper">
             <Text className="label">申请理由：</Text>
@@ -122,13 +121,18 @@ class Approve extends Component {
   };
 
   render() {
-    const { list } = this.state;
+    const clubApprove = this.props.clubApprove;
+    const joinClubApprove = this.props.joinClubApprove;
     return (
       <View className="approve-container">
-        {list.map(item => (
+        {clubApprove.map(item => (
           <View key={item.id}>
-            {item.type === 1 && this.renderClubApproveCard(item)}
-            {item.type === 2 && this.renderMemberApproveCard(item)}
+            {this.renderClubApproveCard(item)}
+          </View>
+        ))}
+        {joinClubApprove.map(item => (
+          <View key={item.applicantId}>
+            {this.renderMemberApproveCard(item)}
           </View>
         ))}
       </View>

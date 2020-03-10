@@ -54,3 +54,43 @@ export interface Activity {
 }
 
 export type Activities = Array<Activity>;
+
+export interface ClubApply {
+  applyDate: string
+  creatorId: number
+  creatorName: string
+  id: number
+  introduction: string
+  name: string
+  picture: string
+  type: number
+}
+
+export interface JoinClubApply {
+  applicantName: string
+  applyDate: string
+  clubId: number
+  clubName: string
+  reason: string
+}
+
+
+export interface ClubApprove {
+  applyDate: string
+  creatorId: number
+  creatorName: string
+  id: number
+  introduction: string
+  name: string
+  picture: string
+  type: number
+}
+
+export interface JoinClubApprove {
+  applicantId: number
+  applicantName: string
+  applyDate: string
+  clubId: number
+  clubName: string
+  reason: string
+}

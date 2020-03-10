@@ -2,10 +2,10 @@ import * as clubServices from "@/services/clubs";
 import {
   CREATE_CLUB,
   DELETE_CLUB_MEMBER,
-  EDIT_CLUB,
+  EDIT_CLUB, GET_CLUB_APPLY, GET_CLUB_APPROVE,
   GET_CLUB_DETAIL,
   GET_CLUB_TYPES,
-  GET_CLUBS,
+  GET_CLUBS, GET_JOIN_CLUB_APPLY,
   GET_MY_CLUBS
 } from "@/constants/index";
 
@@ -80,5 +80,48 @@ export function deleteClubMember(userId: number, clubId: number) {
       dispatch(getClubDetail(clubId))
     );
   }
+}
 
+export function getClubApply() {
+  return dispatch => {
+    clubServices.getClubApply().then(res =>
+      dispatch({
+        type: GET_CLUB_APPLY,
+        payload: res.data
+      })
+    )
+  }
+}
+
+export function getJoinClubApply() {
+  return dispatch => {
+    clubServices.getJoinClubApply().then(res =>
+      dispatch({
+        type: GET_JOIN_CLUB_APPLY,
+        payload: res.data
+      })
+    )
+  }
+}
+
+export function getClubApprove() {
+  return dispatch => {
+    clubServices.getClubApprove().then(res =>
+      dispatch({
+        type: GET_CLUB_APPROVE,
+        payload: res.data
+      })
+    )
+  }
+}
+
+export function getJoinClubApprove() {
+  return dispatch => {
+    clubServices.getJoinClubApprove().then(res =>
+      dispatch({
+        type: GET_JOIN_CLUB_APPLY,
+        payload: res.data
+      })
+    )
+  }
 }

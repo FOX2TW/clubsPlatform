@@ -9,5 +9,7 @@ export default {
   getInvolvedClubs: "/api/club/user/<userId>",
   getInvolvedActivities: "/api/activity/user/<userId>",
   getUserInfo: "/api/user/<userId>",
-  createActivity: "/api/activity"
+  createActivity: "/api/activity",
+  getActivities: "/api/activity/list/visible",
+  getActivityDetail: "/api/activity/<activityId>"
 };

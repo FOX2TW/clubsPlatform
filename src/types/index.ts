@@ -36,8 +36,12 @@ export interface ClubType {
 export type ClubTypes = Array<ClubType>;
 
 export interface Activity {
+  id?: number;
+  clubName?: string;
+  recruiting?: boolean;
+  joined?: boolean;
+  status?: number;
   clubId: number;
-  clubName: string;
   name: string;
   picture: string;
   endJoinDate: string;
@@ -48,3 +52,5 @@ export interface Activity {
   open: boolean;
   thumbsUp: number;
 }
+
+export type Activities = Array<Activity>;

@@ -5,12 +5,18 @@ import dayjs from "dayjs";
 import { AtIcon, AtButton } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { bindActionCreators } from "redux";
+import { getActivities } from "@/actions/activity";
+import { Activities, Activity as IActivity } from "@/types/index";
 
 import "./index.scss";
 
-type PageStateProps = {};
+type PageStateProps = {
+  activities: Activities;
+};
 
-type PageDispatchProps = {};
+type PageDispatchProps = {
+  getActivities: () => void;
+};
 
 type PageOwnProps = {};
 
@@ -23,54 +29,31 @@ interface Activity {
 }
 
 @connect(
-  () => ({}),
-  dispatch => bindActionCreators({}, dispatch)
+  ({ activity }) => ({
+    activities: activity.activities
+  }),
+  dispatch =>
+    bindActionCreators({ getActivities } as PageDispatchProps, dispatch)
 )
 class Activity extends Component {
   config: Config = {
     navigationBarTitleText: "活动",
     navigationBarBackgroundColor: "#6190E8",
-    navigationBarTextStyle: "white"
-    // enablePullDownRefresh: true
+    navigationBarTextStyle: "white",
+    enablePullDownRefresh: true
   };
 
-  navigate = id => {
+  navigate = id => () => {
     Taro.navigateTo({ url: `/pages/activity/detail?id=${id}` });
   };
 
-  renderAvtivityCard = () => {
-    return (
-      <View className="card">
-        <View className="card-head">
-          <Text className="text">足球俱乐部</Text>
-          <View className="extra">
-            <Text>招募中</Text>
-          </View>
-        </View>
-        <View className="content">
-          <View className="intro">
-            <Text className="name">足球狂欢</Text>
-            <Text className="des">
-              快来参加我们的活动快来参加我们的活动快来参加我们的活动快来参加...
-            </Text>
-          </View>
-          <View className="handle">
-            <AtButton type="primary">立即报名</AtButton>
-          </View>
-        </View>
-        <View className="bottom">
-          <Text>报名截止时间：2020-10-22</Text>
-          <View onClick={this.navigate}>
-            <Text>查看详情</Text>
-            {/* arrow-right */}
-            <AtIcon value="chevron-right" size="20" />
-          </View>
-        </View>
-      </View>
-    );
-  };
+  componentDidMount() {
+    this.props.getActivities();
+  }
 
   render() {
+    const { activities } = this.props;
+    console.log(activities);
     return (
       <View className="activity-container">
         <View className="header-wrapper">
@@ -84,7 +67,51 @@ class Activity extends Component {
           <Image className="img" src={require("@/images/header-bg.png")} />
           <View className="shadow" />
         </View>
-        <View className="list">{this.renderAvtivityCard()}</View>
+        <View className="list">
+          {activities.map((activity: IActivity) => (
+            <View className="card" key={activity.id}>
+              <View className="card-head">
+                <Text className="text">{activity.clubName}</Text>
+                <View className="extra">
+                  {activity.recruiting && <Text>招募中</Text>}
+                </View>
+              </View>
+              <View className="content">
+                <View className="intro">
+                  <Text className="name">{activity.name}</Text>
+                  <Text className="des">
+                    {activity.description.substr(0, 100)}
+                  </Text>
+                </View>
+                <View className="handle">
+                  {activity.status === 0 && (
+                    <AtButton type="primary" disabled={activity.joined}>
+                      {activity.joined ? "已加入" : "立即报名"}
+                    </AtButton>
+                  )}
+                  {activity.status === 1 && (
+                    <AtButton disabled className="disabled">
+                      已开始
+                    </AtButton>
+                  )}
+                  {activity.status === 2 && (
+                    <AtButton disabled className="disabled">
+                      已结束
+                    </AtButton>
+                  )}
+                </View>
+              </View>
+              <View className="bottom">
+                <Text>报名截止时间：{activity.endJoinDate}</Text>
+                <View onClick={this.navigate(activity.id)}>
+                  <Text>查看详情</Text>
+                  {/* arrow-right */}
+                  <AtIcon value="chevron-right" size="20" />
+                </View>
+              </View>
+            </View>
+          ))}
+        </View>
       </View>
     );
   }

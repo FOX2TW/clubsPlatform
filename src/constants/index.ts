@@ -1,3 +1,4 @@
+// actions
 export const GET_CLUB_TYPES = "GET_CLUB_TYPES";
 export const GET_CLUBS = "GET_CLUBS";
 export const GET_CLUB_DETAIL = "GET_CLUB_DETAIL";
@@ -7,3 +8,9 @@ export const CREATE_CLUB = "CREATE_CLUB";
 export const DELETE_CLUB_MEMBER = "DELETE_CLUB_MEMBER";
 
 export const CREATE_ACTIVITY = "CREATE_ACTIVITY";
+export const GET_ACTIVITIES = "GET_ACTIVITIES";
+export const GET_ACTIVITY_DETAIL = "GET_ACTIVITY_DETAIL";
+
+// page constant
+
+export const ACTIVITY_STATUS = {};

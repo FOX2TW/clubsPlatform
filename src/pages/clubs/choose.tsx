@@ -5,7 +5,7 @@ import { connect } from "@tarojs/redux";
 import { bindActionCreators } from "redux";
 import { AtRadio, AtButton } from "taro-ui";
 import { getMyclubs } from "@/actions/clubs";
-import { ClubList } from "@/types";
+import { ClubList } from "@/types/index";
 import "./choose.scss";
 
 type PageStateProps = {
@@ -29,7 +29,7 @@ interface ClubsChoose {
   ({ clubs }) => ({
     myClubs: clubs.myClubs
   }),
-  dispatch => bindActionCreators({ getMyclubs }, dispatch)
+  dispatch => bindActionCreators({ getMyclubs } as PageDispatchProps, dispatch)
 )
 class ClubsChoose extends Component {
   config: Config = {
@@ -41,7 +41,7 @@ class ClubsChoose extends Component {
   };
 
   componentDidMount() {
-    const userId = 123;
+    const userId = 1;
     this.props.getMyclubs(userId);
   }
 
@@ -50,7 +50,7 @@ class ClubsChoose extends Component {
     return myClubs.map(club => ({
       label: club.name,
       value: Number(club.id),
-      disabled: club.isManager
+      disabled: !club.isManager
     }));
   }
 
@@ -61,6 +61,14 @@ class ClubsChoose extends Component {
   next = () => {
     const { value } = this.state;
     Taro.navigateTo({ url: `/pages/activity/form?id=${value}` });
+  };
+
+  renderEmpty = () => {
+    return (
+      <View>
+        <Text>您还未加入任何俱乐部哦</Text>
+      </View>
+    );
   };
 
   render() {

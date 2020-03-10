@@ -1,0 +1,30 @@
+.date-picker {
+  display: flex;
+  align-items: center;
+
+  .line {
+    font-size: 30px;
+    padding: 0 30px;
+  }
+
+  .picker-wrap {
+    flex: 1
+  }
+
+  .date {
+    flex: 1;
+    border: 1px solid #d6e4ef;
+    border-radius: 10px;
+    font-size: 24px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    color: #3E4855;
+
+    .placeholder {
+      color: #cdcdcd;
+    }
+  }
+}

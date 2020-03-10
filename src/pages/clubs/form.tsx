@@ -1,8 +1,8 @@
-import {ComponentClass} from "react";
-import Taro, {Component, Config} from "@tarojs/taro";
-import {connect} from "@tarojs/redux";
-import {bindActionCreators} from "redux";
-import {Text, View} from "@tarojs/components";
+import { ComponentClass } from "react";
+import Taro, { Component, Config } from "@tarojs/taro";
+import { connect } from "@tarojs/redux";
+import { bindActionCreators } from "redux";
+import { Text, View } from "@tarojs/components";
 
 import {
   AtActionSheet,
@@ -16,8 +16,8 @@ import {
   AtTextarea
 } from "taro-ui";
 import cls from "classnames";
-import {Club, ClubTypes,ClubList} from "@/types/index";
-import {createClub, editClub, getClubTypes} from "@/actions/clubs";
+import { Club, ClubTypes, ClubList } from "@/types/index";
+import { createClub, editClub, getClubTypes } from "@/actions/clubs";
 
 import "./form.scss";
 
@@ -45,13 +45,14 @@ interface ClubForm {
   dispatch =>
     bindActionCreators(
       {
-        getClubTypes, createClub, editClub
-      },
+        getClubTypes,
+        createClub,
+        editClub
+      } as PageDispatchProps,
       dispatch
     )
 )
 class ClubForm extends Component {
-
   state = {
     id: 0,
     isUseDefault: true,
@@ -61,13 +62,13 @@ class ClubForm extends Component {
     type: {},
     introduction: "",
     address: "",
-    files: [],
+    files: []
   };
 
   componentWillMount() {
     this.props.getClubTypes();
     const id = parseInt(this.$router.params["id"]);
-    if (id){
+    if (id) {
       const filter = this.props.clubs.filter(c => c.id === id);
       if (filter.length > 0) {
         const club = filter[0];
@@ -76,14 +77,13 @@ class ClubForm extends Component {
           type: {
             id: club.type,
             name: this.props.types.filter(t => t.id === club.type)[0].name
-          },
+          }
         });
-        Taro.setNavigationBarTitle({title: "俱乐部修改"})
+        Taro.setNavigationBarTitle({ title: "俱乐部修改" });
       }
-    }else{
-      Taro.setNavigationBarTitle({title: "俱乐部创建"})
+    } else {
+      Taro.setNavigationBarTitle({ title: "俱乐部创建" });
     }
-
   }
 
   onSubmit = () => {
@@ -92,14 +92,14 @@ class ClubForm extends Component {
       picture: this.state.picture,
       name: this.state.name,
       type: this.state.type.id,
-      introduction: this.state.introduction,
+      introduction: this.state.introduction
     };
     if (club.id) {
-      this.props.editClub(club)
-    }else {
-      this.props.createClub(club)
+      this.props.editClub(club);
+    } else {
+      this.props.createClub(club);
     }
-    Taro.navigateBack()
+    Taro.navigateBack();
   };
   nameInputChange = name => {
     this.setState({ name });
@@ -114,7 +114,7 @@ class ClubForm extends Component {
   };
 
   typeInputChange = type => {
-    this.setState({type: {name: type}});
+    this.setState({ type: { name: type } });
   };
 
   openTypeActionSheet = () => {

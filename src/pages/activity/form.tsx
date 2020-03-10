@@ -2,7 +2,8 @@ import { ComponentClass } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
 import { connect } from "@tarojs/redux";
 import { bindActionCreators } from "redux";
-import { View, Text, Picker } from "@tarojs/components";
+import { View, Text } from "@tarojs/components";
+import dayjs from "dayjs";
 import {
   AtForm,
   AtInput,
@@ -10,21 +11,26 @@ import {
   AtImagePicker,
   AtRadio,
   AtTextarea,
-  AtIcon,
-  AtSwitch
+  AtSwitch,
+  AtMessage
 } from "taro-ui";
-import cls from "classnames";
+
 import { find } from "lodash";
 import { ClubList, Activity, Club } from "@/types/index";
 import { createActivity } from "@/actions/activity";
+import DatePicker from "@/components/DatePicker/index";
 
 import "./form.scss";
+
+const dateFormat = (value, format = "YYYY-MM-DD HH:mm:ss") => {
+  return dayjs(value).format(format);
+};
 
 type PageStateProps = {
   myClubs: ClubList;
 };
 type PageDispatchProps = {
-  createActivity: (data: Activity) => void;
+  createActivity: (data: Activity) => any;
 };
 type PageOwnProps = {};
 type PageState = {};
@@ -37,7 +43,8 @@ interface ActivityForm {
   ({ clubs }) => ({
     myClubs: clubs.myClubs
   }),
-  dispatch => bindActionCreators({ createActivity }, dispatch)
+  dispatch =>
+    bindActionCreators({ createActivity } as PageDispatchProps, dispatch)
 )
 class ActivityForm extends Component {
   config: Config = {
@@ -56,31 +63,30 @@ class ActivityForm extends Component {
     startDate: "",
     endDate: "",
     endJoinDate: "",
-    limit: ""
+    limit: Infinity
   };
 
-  get currentClub(): Club {
+  get currentClub() {
     const { id } = this.$router.params;
     const { myClubs } = this.props;
-    return find(myClubs, club => club.id === Number(id));
+    return find(myClubs, club => club.id === Number(id)) as Club;
   }
 
   onSubmit = () => {
-    const { id, name } = this.currentClub;
-    const data = {
+    const { id = Infinity } = this.currentClub;
+    const { isLimit, limit } = this.state;
+    const data: Activity = {
       clubId: id,
-      clubName: name,
       name: this.state.name,
       picture: this.state.picture,
-      endJoinDate: this.state.endJoinDate,
-      startDate: this.state.startDate,
-      endDate: this.state.startDate,
-      limit: this.state.limit,
+      endJoinDate: dateFormat(this.state.endJoinDate),
+      startDate: dateFormat(this.state.startDate),
+      endDate: dateFormat(this.state.startDate),
+      limit: isLimit ? Number(!isLimit) : limit,
       description: this.state.description,
       open: this.state.open,
       thumbsUp: 0
     };
-
     this.props.createActivity(data);
   };
   nameInputChange = name => {
@@ -99,16 +105,16 @@ class ActivityForm extends Component {
     this.setState({ open });
   };
 
-  startDateChange = e => {
-    this.setState({ startDate: e.target.value });
+  startDateChange = startDate => {
+    this.setState({ startDate });
   };
 
-  endDateChange = e => {
-    this.setState({ endDate: e.target.value });
+  endDateChange = endDate => {
+    this.setState({ endDate });
   };
 
-  endJoinDateChange = e => {
-    this.setState({ endJoinDate: e.target.value });
+  endJoinDateChange = endJoinDate => {
+    this.setState({ endJoinDate });
   };
 
   limitInputChange = limit => {
@@ -116,29 +122,19 @@ class ActivityForm extends Component {
   };
 
   onFileChange = files => {
-    this.setState({
-      files
-    });
+    this.setState({ files, picture: files[0].url });
   };
+
   onFileFail = mes => {
     console.log(mes);
   };
 
   render() {
-    const {
-      name,
-      description,
-      files,
-      endDate,
-      endJoinDate,
-      startDate,
-      open,
-      limit,
-      isLimit
-    } = this.state;
+    const { name, description, files, open, limit, isLimit } = this.state;
 
     return (
       <View className="activity-form-container">
+        <AtMessage />
         <AtForm onSubmit={this.onSubmit}>
           <View className="form-extra">
             <Text className="label">俱乐部：</Text>
@@ -176,20 +172,7 @@ class ActivityForm extends Component {
               <Text className="required">*</Text>
               <Text className="label">开始时间：</Text>
             </View>
-            <Picker
-              mode="date"
-              start="1999-01-01"
-              end="2100-01-01"
-              value={startDate}
-              onChange={this.startDateChange}
-            >
-              <View className="date-picker">
-                <Text className={cls({ placeholder: !startDate })}>
-                  {startDate || "请选择时间"}
-                </Text>
-                <AtIcon value="calendar" size="20" color="#6190E8" />
-              </View>
-            </Picker>
+            <DatePicker onChange={this.startDateChange} />
           </View>
 
           <View className="form-item">
@@ -197,41 +180,15 @@ class ActivityForm extends Component {
               <Text className="required">*</Text>
               <Text className="label">结束时间：</Text>
             </View>
-            <Picker
-              mode="date"
-              start="1999-01-01"
-              end="2100-01-01"
-              value={endDate}
-              onChange={this.endDateChange}
-            >
-              <View className="date-picker">
-                <Text className={cls({ placeholder: !endDate })}>
-                  {endDate || "请选择时间"}
-                </Text>
-                <AtIcon value="calendar" size="20" color="#6190E8" />
-              </View>
-            </Picker>
+            <DatePicker onChange={this.endDateChange} />
           </View>
 
           <View className="form-item">
             <View className="label-wrap">
               <Text className="required">*</Text>
-              <Text className="label">截止时间：</Text>
+              <Text className="label">报名截止时间：</Text>
             </View>
-            <Picker
-              mode="date"
-              start="1999-01-01"
-              end="2100-01-01"
-              value={endJoinDate}
-              onChange={this.endJoinDateChange}
-            >
-              <View className="date-picker">
-                <Text className={cls({ placeholder: !endJoinDate })}>
-                  {endJoinDate || "请选择时间"}
-                </Text>
-                <AtIcon value="calendar" size="20" color="#6190E8" />
-              </View>
-            </Picker>
+            <DatePicker onChange={this.endJoinDateChange} />
           </View>
 
           <View className="form-item">
@@ -244,7 +201,7 @@ class ActivityForm extends Component {
                 name="value"
                 type="number"
                 placeholder="请输入人数"
-                value={limit}
+                value={String(limit)}
                 onChange={this.limitInputChange}
                 disabled={isLimit}
               />

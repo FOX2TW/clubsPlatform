@@ -2,7 +2,7 @@ import Taro, { Component, Config } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import { ComponentClass } from "react";
-import { AtAvatar, AtButton, AtCard, AtList, AtListItem } from "taro-ui";
+import {AtButton, AtCard, AtFab, AtList, AtListItem} from "taro-ui";
 import {getClubDetail, getClubTypes} from "@/actions/clubs";
 import "./detail.scss";
 import {ClubDetail, ClubTypes} from "@/types/index";
@@ -146,6 +146,18 @@ class Detail extends Component {
             </AtList>
           </View>
         </AtCard>
+        <View>
+          {isJoin !== "true" && <View className='join'>
+            <AtButton
+              type='primary'
+              size='normal'
+              onClick={()=> Taro.navigateTo({url: `/pages/clubs/apply?clubId=${detail.id}`})}
+            >
+              申请加入
+            </AtButton>
+          </View>}
+          {isJoin === "true" && <AtButton className='quit' customStyle='color:red;border-color:red;' type='secondary' size='normal'>退出俱乐部</AtButton>}
+        </View>
       </View>
     );
   }

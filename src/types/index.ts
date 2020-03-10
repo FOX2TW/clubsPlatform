@@ -98,3 +98,11 @@ export interface JoinClubApprove {
   clubName: string
   reason: string
 }
+
+
+export interface JoinClub {
+  cellphone: string
+  clubId: number
+  reason: string
+  weChatNo: string
+}

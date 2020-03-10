@@ -1,9 +1,11 @@
 import API from "@/constants/api";
 import fetch from "@/utils/request";
+import {JoinClub} from "@/types/index";
 
 export const fetchClubTypes = () => {
   return fetch(API.getClubType);
 };
+
 
 export const fetchClubs = () => {
   return fetch(API.getClubs);
@@ -143,4 +145,8 @@ export const getClubApprove = () => {
 
 export const getJoinClubApprove = () => {
   return fetch(API.getJoinClubApprove)
+}
+
+export const  joinClub= (join)=> {
+  return fetch(API.joinClub, {method: "POST", data: join})
 }

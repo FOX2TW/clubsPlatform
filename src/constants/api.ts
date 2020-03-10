@@ -18,6 +18,7 @@ export default {
   // 我的审批
   getClubApprove: "/api/club/application/admin",
   getJoinClubApprove: "/api/club/application/manager",
+  joinClub: "/api/club/join",
   joinActivity: "/api/activity/<activityId>/join",
   cancelJoinActivity: "/api/activity/<activityId>/cancelJoining"
 };

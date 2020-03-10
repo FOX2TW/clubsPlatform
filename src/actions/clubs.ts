@@ -6,10 +6,10 @@ import {
   GET_CLUB_DETAIL,
   GET_CLUB_TYPES,
   GET_CLUBS, GET_JOIN_CLUB_APPLY,
-  GET_MY_CLUBS
+  GET_MY_CLUBS, JOIN_CLUB
 } from "@/constants/index";
 
-import {Club, ClubList, ClubTypes} from "@/types/index";
+import {Club, ClubList, ClubTypes, JoinClub} from "@/types/index";
 
 export const getClubTypes = () => {
   return dispatch =>
@@ -122,6 +122,20 @@ export function getJoinClubApprove() {
         type: GET_JOIN_CLUB_APPLY,
         payload: res.data
       })
+    )
+  }
+}
+
+
+export function joinClub(join) {
+  console.log(join)
+  return dispatch => {
+    clubServices.joinClub(join).then(res =>
+      dispatch({
+        type: JOIN_CLUB,
+      })
+    ).then(() =>
+      dispatch(getClubDetail(join.clubId))
     )
   }
 }

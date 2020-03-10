@@ -59,6 +59,17 @@
   .activity {
 
   }
+
+  .join{
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    z-index: 9999;
+  }
+
+  .quit{
+    margin-top: 10px;
+  }
 }
 
 .m-t-10{

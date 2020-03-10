@@ -4,5 +4,6 @@ export const GET_CLUB_DETAIL = "GET_CLUB_DETAIL";
 export const EDIT_CLUB = "EDIT_CLUB";
 export const GET_MY_CLUBS = "GET_MY_CLUBS";
 export const CREATE_CLUB = "CREATE_CLUB";
+export const DELETE_CLUB_MEMBER = "DELETE_CLUB_MEMBER";
 
 export const CREATE_ACTIVITY = "CREATE_ACTIVITY";

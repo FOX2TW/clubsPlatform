@@ -4,6 +4,7 @@ export default {
   createClub: "/api/club",
   updateClub: "/api/club",
   getClubType: "/api/club/type",
+  deleteClubMember: "/api/club/<clubId>/member/<userId>",
   getClubDetailInfo: "/api/club/<clubId>",
   getInvolvedClubs: "/api/club/user/<userId>",
   getInvolvedActivities: "/api/activity/user/<userId>",

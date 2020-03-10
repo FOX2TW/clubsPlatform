@@ -1,13 +1,15 @@
 import * as clubServices from "@/services/clubs";
 import {
-  GET_CLUB_TYPES,
-  GET_CLUB_DETAIL,
-  GET_CLUBS,
+  CREATE_CLUB,
+  DELETE_CLUB_MEMBER,
   EDIT_CLUB,
-  GET_MY_CLUBS, CREATE_CLUB
+  GET_CLUB_DETAIL,
+  GET_CLUB_TYPES,
+  GET_CLUBS,
+  GET_MY_CLUBS
 } from "@/constants/index";
 
-import { Club, ClubList, ClubTypes } from "@/types/index";
+import {Club, ClubList, ClubTypes} from "@/types/index";
 
 export const getClubTypes = () => {
   return dispatch =>
@@ -40,21 +42,22 @@ export function getClubDetail(id: number) {
 }
 
 export function editClub(clubDetail: Club) {
-  return {
-    type: EDIT_CLUB,
-    clubDetail: clubDetail
-  };
+  return dispatch =>
+    clubServices.fetchUpdateClub(clubDetail).then(res =>
+      dispatch({
+        type: EDIT_CLUB,
+        clubDetail: clubDetail
+      })
+    ).then(() => dispatch(getClubs()));
 }
 
 export function createClub(club: Club) {
-  console.log(club)
-
   return dispatch =>
     clubServices.fetchCreateClub(club).then(res =>
       dispatch({
         type: CREATE_CLUB
       })
-    );
+    ).then(() => dispatch(getClubs()));
 }
 
 export function getMyclubs(userId: number) {
@@ -65,4 +68,17 @@ export function getMyclubs(userId: number) {
         payload: res.data
       })
     );
+}
+
+export function deleteClubMember(userId: number, clubId: number) {
+  return dispatch => {
+    clubServices.deleteClubMember(userId, clubId).then(res =>
+      dispatch({
+        type: DELETE_CLUB_MEMBER
+      })
+    ).then(() =>
+      dispatch(getClubDetail(clubId))
+    );
+  }
+
 }

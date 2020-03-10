@@ -119,3 +119,12 @@ export const fetchMyClubs = userId => {
 export const fetchCreateClub = club => {
   return fetch(API.createClub, {method: "POST", data: club});
 };
+
+export const fetchUpdateClub = club => {
+  return fetch(API.updateClub, {method: "PUT", data: club})
+};
+
+export const deleteClubMember = (userId, clubId) => {
+  const url = API.deleteClubMember.replace("<userId>", userId).replace("<clubId>", clubId);
+  return fetch(url, {method: "DELETE"})
+}

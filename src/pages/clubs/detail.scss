@@ -3,7 +3,6 @@
 
   .base-info {
     display: flex;
-    margin-top: 10px;
     padding: 20px;
     flex-flow: column;
 
@@ -29,8 +28,6 @@
         }
       }
     }
-
-
   }
 
   .introduction {
@@ -62,4 +59,8 @@
   .activity {
 
   }
+}
+
+.m-t-10{
+  margin-top: 10px;
 }

@@ -40,7 +40,7 @@ export default async function fetch(url: string, options?: Options) {
     method: "GET",
     //mock userId
     header: {
-      accessId: 1
+      currentUserId: 1
     }
   };
   const newOptions = { ...defaultOptions, ...options } as Options;

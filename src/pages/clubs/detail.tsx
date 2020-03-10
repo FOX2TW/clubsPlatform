@@ -78,11 +78,11 @@ class Detail extends Component {
         />
 
         <AtCard
-          className="base-info"
+          className="base-info m-t-10"
           title={detail.name}
           // thumb={require(`./../../assets/images/club/${detail.photo}.jpg`)}
           extra={isManager=="true" ? "编辑" : ""}
-          onClick={() => isManager=="true" && Taro.navigateTo({ url: "/pages/clubs/edit" })}
+          onClick={() => isManager=="true" && Taro.navigateTo({ url: `/pages/clubs/form?id=${this.$router.params["clubId"]}` })}
         >
           <View className="info-list">
             <View className="text-wrapper">
@@ -117,6 +117,7 @@ class Detail extends Component {
         <AtCard
           title="会员"
           extra="所有会员"
+          className='m-t-10'
           // thumb={require('./../../assets/images/club/avatar.jpg')}
           onClick={this.navigate(`/pages/clubs/users?isManager=${isManager}`)}
         >
@@ -130,6 +131,7 @@ class Detail extends Component {
         <AtCard
           title="活动"
           extra="历史活动"
+          className='m-t-10'
           // thumb={require('./../../assets/images/club/avatar.jpg')}
         >
           <View className="activity">

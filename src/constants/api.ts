@@ -12,6 +12,7 @@ export default {
   createActivity: "/api/activity",
   getActivities: "/api/activity/list/visible",
   getActivityDetail: "/api/activity/<activityId>",
+  quitClub: "/api/club/<clubId>/member",
   // 我的申请
   getClubApply: "/api/club/application",
   getJoinClubApply: "/api/club/join/application",

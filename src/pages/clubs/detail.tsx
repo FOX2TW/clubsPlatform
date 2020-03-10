@@ -2,10 +2,11 @@ import Taro, { Component, Config } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import { ComponentClass } from "react";
-import {AtButton, AtCard, AtFab, AtList, AtListItem} from "taro-ui";
-import {getClubDetail, getClubTypes} from "@/actions/clubs";
+import {AtButton, AtCard, AtList, AtListItem} from "taro-ui";
+import {quitClub, getClubDetail, getClubTypes} from "@/actions/clubs";
 import "./detail.scss";
 import {ClubDetail, ClubTypes} from "@/types/index";
+import {bindActionCreators} from "redux";
 
 type PageStateProps = {
     clubDetail: ClubDetail;
@@ -13,7 +14,8 @@ type PageStateProps = {
 };
 type PageDispatchProps = {
   getClubDetail: (id) => void;
-  getClubType: () => void;
+  getClubTypes: () => void;
+  quitClub: (id) => void;
 };
 type PageOwnProps = {};
 type PageState = {};
@@ -28,14 +30,15 @@ interface Detail {
     clubDetail: clubs.clubDetail,
     types: clubs.types
   }),
-  dispatch => ({
-    getClubDetail(id) {
-      dispatch(getClubDetail(id));
-    },
-    getClubType(){
-      dispatch(getClubTypes())
-    }
-  })
+  dispatch =>
+    bindActionCreators(
+      {
+        getClubDetail,
+        getClubTypes,
+        quitClub
+      } as PageDispatchProps,
+      dispatch
+    )
 )
 class Detail extends Component {
   config: Config = {
@@ -45,6 +48,11 @@ class Detail extends Component {
   navigate = url => () => {
     Taro.navigateTo({ url });
   };
+
+  quitClub = ()=> {
+    this.props.quitClub(this.props.clubDetail.id);
+    Taro.navigateBack()
+  }
 
   User(user) {
     return (
@@ -156,7 +164,16 @@ class Detail extends Component {
               申请加入
             </AtButton>
           </View>}
-          {isJoin === "true" && <AtButton className='quit' customStyle='color:red;border-color:red;' type='secondary' size='normal'>退出俱乐部</AtButton>}
+          {isJoin === "true" &&
+          <AtButton
+            className='quit'
+            customStyle='color:red;border-color:red;'
+            type='secondary'
+            size='normal'
+            onClick={this.quitClub}
+          >
+            退出俱乐部
+          </AtButton>}
         </View>
       </View>
     );

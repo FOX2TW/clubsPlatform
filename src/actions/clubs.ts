@@ -7,7 +7,7 @@ import {
   GET_CLUB_DETAIL,
   GET_CLUB_TYPES,
   GET_CLUBS, GET_JOIN_CLUB_APPLY, GET_JOIN_CLUB_APPROVE,
-  GET_MY_CLUBS, JOIN_CLUB
+  GET_MY_CLUBS, JOIN_CLUB, QUIT_CLUB
 } from "@/constants/index";
 
 import {Club, ClubList, ClubTypes, JoinClub} from "@/types/index";
@@ -187,4 +187,15 @@ export function cancelJoinClub(id) {
       })
     )
       .then(() => dispatch(getJoinClubApply()));
+}
+
+
+export function quitClub(clubId) {
+  return dispatch =>
+    clubServices.fetchQuitClub(clubId).then(res =>
+      dispatch({
+        type: QUIT_CLUB
+      })
+    )
+      .then(() => dispatch(getClubs()));
 }

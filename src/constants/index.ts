@@ -15,7 +15,7 @@ export const APPROVE_CLUB = "APPROVE_CLUB";
 export const APPROVE_JOIN_CLUB = "APPROVE_JOIN_CLUB";
 export const DELETE_CLUB = "DELETE_CLUB";
 export const CANCEL_JOIN_CLUB = "CANCEL_JOIN_CLUB";
-
+export const QUIT_CLUB = "QUIT_CLUB";
 
 
 export const CREATE_ACTIVITY = "CREATE_ACTIVITY";

@@ -168,3 +168,8 @@ export const fetchCancelJoinClub = id => {
   const url = API.cancelJoinClub.replace("<clubId>", id);
   return fetch(url, {method: "DELETE"})
 }
+
+export const fetchQuitClub = id => {
+  const url = API.quitClub.replace("<clubId>", id);
+  return fetch(url, {method: "DELETE"})
+}

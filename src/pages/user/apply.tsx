@@ -1,11 +1,13 @@
-import { ComponentClass } from "react";
-import Taro, { Component, Config } from "@tarojs/taro";
-import { View, Text, Button } from "@tarojs/components";
-import { AtIcon } from "taro-ui";
-import "./apply.scss";
-import {connect} from "@tarojs/redux";
+import {ComponentClass} from "react";
+import Taro, {Component, Config} from "@tarojs/taro";
+import {Button, Text, View} from "@tarojs/components";
+import {AtIcon} from "taro-ui";
 import {ClubApply, JoinClubApply} from "@/types/index";
-import {getClubApply, getJoinClubApply} from "@/actions/clubs";
+import {connect} from "@tarojs/redux";
+import {cancelCreateClub, cancelJoinClub, getClubApply, getJoinClubApply} from "@/actions/clubs";
+import {bindActionCreators} from "redux";
+
+import "./apply.scss";
 
 type PageStateProps = {
   clubApply: Array<ClubApply>
@@ -14,26 +16,31 @@ type PageStateProps = {
 type PageDispatchProps = {
   getClubApply: () => void
   getJoinClubApply: () => void
+  cancelCreateClub: (id) => void
+  cancelJoinClub: (id) => void
 };
 type PageOwnProps = {};
 type PageState = {};
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
+
 interface Approve {
   props: IProps;
 }
 
 @connect(
-  ({ clubs }) => ({
+  ({clubs}) => ({
     clubApply: clubs.clubApply,
     joinClubApply: clubs.joinClubApply
-  }),dispatch => ({
-    getClubApply(){
-      dispatch(getClubApply())
-    },
-    getJoinClubApply(){
-      dispatch(getJoinClubApply())
-    }
-  })
+  }), dispatch =>
+    bindActionCreators(
+      {
+        getClubApply,
+        getJoinClubApply,
+        cancelCreateClub,
+        cancelJoinClub
+      } as PageDispatchProps,
+      dispatch
+    )
 )
 class Approve extends Component {
   config: Config = {
@@ -43,6 +50,14 @@ class Approve extends Component {
   componentWillMount(): void {
     this.props.getClubApply();
     this.props.getJoinClubApply()
+  }
+
+  cancelCreateClub = id => {
+    this.props.cancelCreateClub(id)
+  };
+
+  cancelJoinClub = id => {
+    this.props.cancelJoinClub(id)
   }
 
   renderClubApproveCard = (item) => {
@@ -75,13 +90,13 @@ class Approve extends Component {
           </View>
         </View>
         <View className="card-actions">
-          <Button className="btn">撤销</Button>
+          <Button className="btn" onClick={() => this.cancelCreateClub(item.id)}>撤销</Button>
         </View>
       </View>
     );
   };
 
-  renderMemberApproveCard =  (item) => {
+  renderMemberApproveCard = (item) => {
     return (
       <View className="card">
         <View className="card-title-wrap">
@@ -111,7 +126,7 @@ class Approve extends Component {
           </View>
         </View>
         <View className="card-actions">
-          <Button className="btn">撤销</Button>
+          <Button className="btn" onClick={() => this.cancelJoinClub(item.clubId)}>撤销</Button>
         </View>
       </View>
     );

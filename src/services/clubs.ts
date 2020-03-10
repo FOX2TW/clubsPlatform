@@ -126,6 +126,11 @@ export const fetchUpdateClub = club => {
   return fetch(API.updateClub, {method: "PUT", data: club})
 };
 
+export const fetchDeleteClub = id => {
+  const url = API.deleteClub.replace("<clubId>", id);
+  return fetch(url, {method: "DELETE"})
+};
+
 export const deleteClubMember = (userId, clubId) => {
   const url = API.deleteClubMember.replace("<userId>", userId).replace("<clubId>", clubId);
   return fetch(url, {method: "DELETE"})
@@ -157,4 +162,9 @@ export const approveClub = (approveResult) => {
 
 export const approveJoinClub = (approveResult) => {
   return fetch(API.approveJoinClub, {method: "PUT", data: approveResult})
+}
+
+export const fetchCancelJoinClub = id => {
+  const url = API.cancelJoinClub.replace("<clubId>", id);
+  return fetch(url, {method: "DELETE"})
 }

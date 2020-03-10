@@ -15,6 +15,8 @@ export default {
   // 我的申请
   getClubApply: "/api/club/application",
   getJoinClubApply: "/api/club/join/application",
+  deleteClub: "/api/club/<clubId>",
+  cancelJoinClub: "/api/club/join/<clubId>",
   // 我的审批
   getClubApprove: "/api/club/application/admin",
   getJoinClubApprove: "/api/club/application/manager",

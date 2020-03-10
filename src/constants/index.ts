@@ -13,6 +13,9 @@ export const GET_JOIN_CLUB_APPROVE = "GET_JOIN_CLUB_APPROVE";
 export const JOIN_CLUB = "JOIN_CLUB";
 export const APPROVE_CLUB = "APPROVE_CLUB";
 export const APPROVE_JOIN_CLUB = "APPROVE_JOIN_CLUB";
+export const DELETE_CLUB = "DELETE_CLUB";
+export const CANCEL_JOIN_CLUB = "CANCEL_JOIN_CLUB";
+
 
 
 export const CREATE_ACTIVITY = "CREATE_ACTIVITY";

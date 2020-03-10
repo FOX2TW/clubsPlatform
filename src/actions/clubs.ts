@@ -1,7 +1,7 @@
 import * as clubServices from "@/services/clubs";
 import {
-  APPROVE_CLUB, APPROVE_JOIN_CLUB,
-  CREATE_CLUB,
+  APPROVE_CLUB, APPROVE_JOIN_CLUB, CANCEL_JOIN_CLUB,
+  CREATE_CLUB, DELETE_CLUB,
   DELETE_CLUB_MEMBER,
   EDIT_CLUB, GET_CLUB_APPLY, GET_CLUB_APPROVE,
   GET_CLUB_DETAIL,
@@ -127,7 +127,6 @@ export function getJoinClubApprove() {
   }
 }
 
-
 export function joinClub(join) {
   console.log(join)
   return dispatch => {
@@ -140,6 +139,7 @@ export function joinClub(join) {
     )
   }
 }
+
 
 export function approveClub(approveResult) {
   return dispatch => {
@@ -167,4 +167,24 @@ export function approveJoinClub(approveResult) {
       dispatch(getClubDetail(approveResult.clubId))
     )
   }
+}
+
+export function cancelCreateClub(id) {
+  return dispatch =>
+    clubServices.fetchDeleteClub(id).then(res =>
+      dispatch({
+        type: DELETE_CLUB
+      })
+    )
+      .then(() => dispatch(getClubApply()));
+}
+
+export function cancelJoinClub(id) {
+  return dispatch =>
+    clubServices.fetchCancelJoinClub(id).then(res =>
+      dispatch({
+        type: CANCEL_JOIN_CLUB
+      })
+    )
+      .then(() => dispatch(getJoinClubApply()));
 }

@@ -59,7 +59,7 @@ class Users extends Component {
               {/* <AtAvatar image={require(`./../../assets/images/user/${user.photo}.png`)} circle/> */}
             </View>
             <View className="user-name">{user.username}</View>
-            {isManager && (
+            {isManager==="true" && (
               <View className="action">
                 <AtButton
                   type="secondary"

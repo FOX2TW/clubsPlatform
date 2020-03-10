@@ -107,7 +107,7 @@ class Approve extends Component {
           </View>
           <View className="text-wrapper">
             <Text className="label">申请理由：</Text>
-            <Text className="text">{item.reson}</Text>
+            <Text className="text">{item.reason}</Text>
           </View>
         </View>
         <View className="card-actions">

@@ -150,3 +150,11 @@ export const getJoinClubApprove = () => {
 export const  joinClub= (join)=> {
   return fetch(API.joinClub, {method: "POST", data: join})
 }
+
+export const approveClub = (approveResult) => {
+  return fetch(API.approveClub, {method: "PUT", data: approveResult})
+}
+
+export const approveJoinClub = (approveResult) => {
+  return fetch(API.approveJoinClub, {method: "PUT", data: approveResult})
+}

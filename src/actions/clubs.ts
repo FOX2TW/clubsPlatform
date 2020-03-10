@@ -1,11 +1,12 @@
 import * as clubServices from "@/services/clubs";
 import {
+  APPROVE_CLUB, APPROVE_JOIN_CLUB,
   CREATE_CLUB,
   DELETE_CLUB_MEMBER,
   EDIT_CLUB, GET_CLUB_APPLY, GET_CLUB_APPROVE,
   GET_CLUB_DETAIL,
   GET_CLUB_TYPES,
-  GET_CLUBS, GET_JOIN_CLUB_APPLY,
+  GET_CLUBS, GET_JOIN_CLUB_APPLY, GET_JOIN_CLUB_APPROVE,
   GET_MY_CLUBS, JOIN_CLUB
 } from "@/constants/index";
 
@@ -119,7 +120,7 @@ export function getJoinClubApprove() {
   return dispatch => {
     clubServices.getJoinClubApprove().then(res =>
       dispatch({
-        type: GET_JOIN_CLUB_APPLY,
+        type: GET_JOIN_CLUB_APPROVE,
         payload: res.data
       })
     )
@@ -136,6 +137,34 @@ export function joinClub(join) {
       })
     ).then(() =>
       dispatch(getClubDetail(join.clubId))
+    )
+  }
+}
+
+export function approveClub(approveResult) {
+  return dispatch => {
+    clubServices.approveClub(approveResult).then(res =>
+      dispatch({
+        type: APPROVE_CLUB,
+      })
+    ).then(() =>
+      dispatch(getClubApprove())
+    ).then(() =>
+      dispatch(getClubs())
+    )
+  }
+}
+
+export function approveJoinClub(approveResult) {
+  return dispatch => {
+    clubServices.approveJoinClub(approveResult).then(res =>
+      dispatch({
+        type: APPROVE_JOIN_CLUB,
+      })
+    ).then(() =>
+      dispatch(getJoinClubApprove())
+    ).then(() =>
+      dispatch(getClubDetail(approveResult.clubId))
     )
   }
 }

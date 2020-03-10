@@ -97,6 +97,7 @@ export interface JoinClubApprove {
   clubId: number
   clubName: string
   reason: string
+  recordId: number
 }
 
 

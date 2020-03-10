@@ -6,7 +6,7 @@
   .header-wrapper {
     position: relative;
     height: 350px;
-    background: linear-gradient(to bottom, #6190E8, #6193E5);
+    background: linear-gradient(to bottom, #6190e8, #6193e5);
 
     .img {
       position: absolute;
@@ -15,7 +15,6 @@
       right: 50px;
       bottom: 20px;
       transform: rotate(20deg);
-
     }
 
     .shadow {
@@ -38,14 +37,13 @@
         position: relative;
 
         &::after {
-          content: '';
+          content: "";
           position: absolute;
           left: 0;
           bottom: -10px;
           width: 30px;
           height: 4px;
           background-color: rgba(255, 255, 255, 0.6);
-
         }
 
         margin-bottom: 50px;
@@ -65,7 +63,7 @@
     .card {
       background: white;
       border-radius: 10px;
-
+      margin-bottom: 30px;
 
       .card-head {
         height: 80px;
@@ -80,24 +78,34 @@
         }
 
         .extra {
-          color: #6190E8;
+          color: #6190e8;
           font-size: 28px;
         }
       }
 
       .content {
         display: flex;
-        color: rgba(0, 0, 0, 0.6);
+
         padding: 0 30px;
 
         .intro {
           display: flex;
           flex-direction: column;
-          padding: 30px 0;
-          font-size: 28px;
+          padding: 20px 0;
+          width: 70%;
 
           .name {
             padding-bottom: 20px;
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 28px;
+          }
+
+          .des {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: rgba(0, 0, 0, 0.5);
+            font-size: 26px;
           }
 
           .date-wrap {
@@ -109,7 +117,7 @@
         .handle {
           display: flex;
           align-items: center;
-          width: 400px;
+          width: 30%;
           justify-content: flex-end;
 
           .at-button {
@@ -117,7 +125,7 @@
             padding: 0;
             line-height: 1;
             padding: 15px 15px;
-            font-size: 24px
+            font-size: 24px;
           }
 
           .disabled {
@@ -137,9 +145,7 @@
         padding-right: 10px;
         height: 70px;
         align-items: center;
-
       }
     }
-
   }
 }

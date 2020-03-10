@@ -2,19 +2,25 @@ import { ComponentClass } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
 import { View, Text, Image } from "@tarojs/components";
 import dayjs from "dayjs";
-import { AtIcon, AtButton } from "taro-ui";
+import { AtButton, AtMessage } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { bindActionCreators } from "redux";
-import { getActivityDetail } from "@/actions/activity";
-import { Activity } from "@/types/index";
+import {
+  getActivityDetail,
+  joinActivity,
+  cancelJoinActivity
+} from "@/actions/activity";
+import { ActivityDetail } from "@/types/index";
 import "./detail.scss";
 
 type PageStateProps = {
-  activity: Activity;
+  activity: ActivityDetail;
 };
 
 type PageDispatchProps = {
   getActivityDetail: (id: string) => void;
+  joinActivity: (id: string) => any;
+  cancelJoinActivity: (id: string) => any;
 };
 
 type PageOwnProps = {};
@@ -32,7 +38,14 @@ interface Detail {
     activity: activity.activity
   }),
   dispatch =>
-    bindActionCreators({ getActivityDetail } as PageDispatchProps, dispatch)
+    bindActionCreators(
+      {
+        getActivityDetail,
+        joinActivity,
+        cancelJoinActivity
+      } as PageDispatchProps,
+      dispatch
+    )
 )
 class Detail extends Component {
   config: Config = {
@@ -44,10 +57,29 @@ class Detail extends Component {
     const { id } = this.$router.params;
     this.props.getActivityDetail(id);
   }
+
+  handleJoin = joined => async () => {
+    const { id } = this.$router.params;
+    try {
+      if (joined) {
+        await this.props.cancelJoinActivity(id);
+      } else {
+        await this.props.joinActivity(id);
+      }
+      Taro.atMessage({
+        message: joined ? "取消活动成功" : "加入活动成功",
+        type: "success"
+      });
+      this.props.getActivityDetail(id);
+    } catch (err) {}
+  };
+
   render() {
     const { activity } = this.props;
+    console.log(activity);
     return (
       <View className="activity-detail-container">
+        <AtMessage />
         <Image className="banner" src={activity.picture}></Image>
         <View className="content">
           <View className="item">
@@ -70,8 +102,8 @@ class Detail extends Component {
               <Text>：</Text>
             </View>
             <Text className="text">
-              {dayjs(activity.startTime).format("MM/DD HH:mm")} -
-              {dayjs(activity.endTime).format("MM/DD HH:mm")}
+              {dayjs(activity.startDate).format("MM/DD HH:mm")} -
+              {dayjs(activity.endDate).format("MM/DD HH:mm")}
             </Text>
           </View>
           <View className="item">
@@ -89,9 +121,7 @@ class Detail extends Component {
               <Text>：</Text>
             </View>
             <Text className="text">
-              {activity.numberLimitation === 0
-                ? "不限制"
-                : `${activity.limit}人`}
+              {activity.limit === 0 ? "不限制" : `${activity.limit}人`}
             </Text>
           </View>
           <View className="item">
@@ -108,13 +138,19 @@ class Detail extends Component {
             </View>
             <View className="user-wrap">
               {activity.joinedUser.map(user => (
-                <Text className="user">{user}</Text>
+                <Text className="user" key={user.id}>
+                  {user.username}
+                </Text>
               ))}
             </View>
           </View>
         </View>
         {activity.status === 0 && (
-          <AtButton className="btn" type="primary">
+          <AtButton
+            className="btn"
+            type="primary"
+            onClick={this.handleJoin(activity.joined)}
+          >
             {activity.joined ? "取消报名" : "立即报名"}
           </AtButton>
         )}

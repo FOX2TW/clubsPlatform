@@ -15,6 +15,9 @@ export const CREATE_ACTIVITY = "CREATE_ACTIVITY";
 export const GET_ACTIVITIES = "GET_ACTIVITIES";
 export const GET_ACTIVITY_DETAIL = "GET_ACTIVITY_DETAIL";
 
+export const JOIN_ACTIVITY = "JOIN_ACTIVITY";
+export const CANCEL_JOIN_ACTIVITY = "CANCEL_JOIN_ACTIVITY";
+
 // page constant
 
 export const ACTIVITY_STATUS = {};

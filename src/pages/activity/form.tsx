@@ -63,7 +63,7 @@ class ActivityForm extends Component {
     startDate: "",
     endDate: "",
     endJoinDate: "",
-    limit: Infinity
+    limit: ""
   };
 
   get currentClub() {
@@ -72,7 +72,7 @@ class ActivityForm extends Component {
     return find(myClubs, club => club.id === Number(id)) as Club;
   }
 
-  onSubmit = () => {
+  onSubmit = async () => {
     const { id = Infinity } = this.currentClub;
     const { isLimit, limit } = this.state;
     const data: Activity = {
@@ -87,7 +87,13 @@ class ActivityForm extends Component {
       open: this.state.open,
       thumbsUp: 0
     };
-    this.props.createActivity(data);
+    await this.props.createActivity(data);
+    await Taro.atMessage({
+      message: "发布活动成功",
+      type: "success",
+      duration: 500
+    });
+    Taro.switchTab({ url: "/pages/activity/index" });
   };
   nameInputChange = name => {
     this.setState({ name });

@@ -2,7 +2,9 @@ import * as activityService from "@/services/activity";
 import {
   CREATE_ACTIVITY,
   GET_ACTIVITIES,
-  GET_ACTIVITY_DETAIL
+  GET_ACTIVITY_DETAIL,
+  JOIN_ACTIVITY,
+  CANCEL_JOIN_ACTIVITY
 } from "@/constants/index";
 import { Activity, Activities } from "@/types/index";
 
@@ -31,6 +33,24 @@ export function getActivityDetail(activityId: string) {
       dispatch({
         payload: res.data as Activity,
         type: GET_ACTIVITY_DETAIL
+      })
+    );
+}
+
+export function cancelJoinActivity(activityId: string) {
+  return dispatch =>
+    activityService.cancelJoinActivity(activityId).then(() =>
+      dispatch({
+        type: CANCEL_JOIN_ACTIVITY
+      })
+    );
+}
+
+export function joinActivity(activityId: string) {
+  return dispatch =>
+    activityService.joinActivity(activityId).then(() =>
+      dispatch({
+        type: JOIN_ACTIVITY
       })
     );
 }

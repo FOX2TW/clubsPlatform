@@ -2,11 +2,12 @@ import { ComponentClass } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
 import { View, Text, Image } from "@tarojs/components";
 import dayjs from "dayjs";
-import { AtIcon, AtButton } from "taro-ui";
+import { AtIcon, AtButton, AtMessage } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { bindActionCreators } from "redux";
-import { getActivities } from "@/actions/activity";
+import { getActivities, joinActivity } from "@/actions/activity";
 import { Activities, Activity as IActivity } from "@/types/index";
+import { getWeek } from "@/utils/tools";
 
 import "./index.scss";
 
@@ -16,6 +17,7 @@ type PageStateProps = {
 
 type PageDispatchProps = {
   getActivities: () => void;
+  joinActivity: (id: string) => any;
 };
 
 type PageOwnProps = {};
@@ -33,7 +35,10 @@ interface Activity {
     activities: activity.activities
   }),
   dispatch =>
-    bindActionCreators({ getActivities } as PageDispatchProps, dispatch)
+    bindActionCreators(
+      { getActivities, joinActivity } as PageDispatchProps,
+      dispatch
+    )
 )
 class Activity extends Component {
   config: Config = {
@@ -51,17 +56,26 @@ class Activity extends Component {
     this.props.getActivities();
   }
 
+  joinActivity = id => async () => {
+    await this.props.joinActivity(id);
+    await Taro.atMessage({
+      message: "加入俱乐部成功",
+      type: "success"
+    });
+    this.props.getActivities();
+  };
+
   render() {
     const { activities } = this.props;
-    console.log(activities);
     return (
       <View className="activity-container">
+        <AtMessage />
         <View className="header-wrapper">
           <View className="day-info-wrap">
             <Text className="date">
               {dayjs(Date.now()).format("YYYY.MM.DD")}
             </Text>
-            <Text className="day">星期一</Text>
+            <Text className="day">{getWeek()}</Text>
             <Text className="wether">成都市双流区 阴 12℃</Text>
           </View>
           <Image className="img" src={require("@/images/header-bg.png")} />
@@ -80,12 +94,16 @@ class Activity extends Component {
                 <View className="intro">
                   <Text className="name">{activity.name}</Text>
                   <Text className="des">
-                    {activity.description.substr(0, 100)}
+                    {activity.description.substring(0, 20)}
                   </Text>
                 </View>
                 <View className="handle">
                   {activity.status === 0 && (
-                    <AtButton type="primary" disabled={activity.joined}>
+                    <AtButton
+                      type="primary"
+                      disabled={activity.joined}
+                      onClick={this.joinActivity(activity.id)}
+                    >
                       {activity.joined ? "已加入" : "立即报名"}
                     </AtButton>
                   )}
@@ -102,7 +120,10 @@ class Activity extends Component {
                 </View>
               </View>
               <View className="bottom">
-                <Text>报名截止时间：{activity.endJoinDate}</Text>
+                <Text>
+                  报名截止时间：
+                  {dayjs(activity.joinEndTime).format("YYYY-MM-DD HH:mm")}
+                </Text>
                 <View onClick={this.navigate(activity.id)}>
                   <Text>查看详情</Text>
                   {/* arrow-right */}

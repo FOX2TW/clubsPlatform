@@ -23,9 +23,9 @@ export interface User {
   weChatNO?: string;
   cellphone?: string;
   address?: string;
-  status?: number,
-  phone?: string,
-  username: string
+  status?: number;
+  phone?: string;
+  username: string;
 }
 
 export interface ClubType {
@@ -47,10 +47,14 @@ export interface Activity {
   endJoinDate: string;
   startDate: string;
   endDate: string;
-  limit: number;
+  limit: number | string;
   description: string;
   open: boolean;
   thumbsUp: number;
+}
+
+export interface ActivityDetail extends Activity {
+  joinedUser?: Array<User>;
 }
 
 export type Activities = Array<Activity>;

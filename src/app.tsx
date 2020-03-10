@@ -1,8 +1,6 @@
 import Taro, { Component, Config } from "@tarojs/taro";
 import { Provider } from "@tarojs/redux";
-
-import User from "./pages/user";
-
+import Activity from "./pages/activity/index";
 import configStore from "./store";
 
 import "./app.scss";
@@ -53,11 +51,17 @@ class App extends Component {
       backgroundColor: "#fff",
       borderStyle: "white",
       list: [
+        // {
+        //   pagePath: "pages/home/index",
+        //   text: "首页",
+        //   iconPath: "./assets/images/tabbar/home.png",
+        //   selectedIconPath: "./assets/images/tabbar/home_selected.png"
+        // },
         {
-          pagePath: "pages/home/index",
-          text: "首页",
-          iconPath: "./assets/images/tabbar/home.png",
-          selectedIconPath: "./assets/images/tabbar/home_selected.png"
+          pagePath: "pages/activity/index",
+          text: "活动",
+          iconPath: "./assets/images/tabbar/activity.png",
+          selectedIconPath: "./assets/images/tabbar/activity_selected.png"
         },
         {
           pagePath: "pages/clubs/index",
@@ -65,12 +69,7 @@ class App extends Component {
           iconPath: "./assets/images/tabbar/club.png",
           selectedIconPath: "./assets/images/tabbar/club_selected.png"
         },
-        {
-          pagePath: "pages/activity/index",
-          text: "活动",
-          iconPath: "./assets/images/tabbar/activity.png",
-          selectedIconPath: "./assets/images/tabbar/activity_selected.png"
-        },
+
         {
           pagePath: "pages/user/index",
           text: "我的",
@@ -94,7 +93,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <User />
+        <Activity />
       </Provider>
     );
   }

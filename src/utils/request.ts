@@ -1,6 +1,7 @@
 import Taro from "@tarojs/taro";
 
 const HOST = "http://murrayee.com";
+// const HOST = "http://localhost:8080";
 
 type Methods = "POST" | "GET" | "OPTIONS" | "PUT" | "DELETE";
 

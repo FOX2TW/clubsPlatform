@@ -44,8 +44,8 @@ class Activity extends Component {
   config: Config = {
     navigationBarTitleText: "活动",
     navigationBarBackgroundColor: "#6190E8",
-    navigationBarTextStyle: "white",
-    enablePullDownRefresh: true
+    navigationBarTextStyle: "white"
+    // enablePullDownRefresh: true
   };
 
   navigate = id => () => {
@@ -56,13 +56,16 @@ class Activity extends Component {
     this.props.getActivities();
   }
 
-  joinActivity = id => async () => {
-    await this.props.joinActivity(id);
-    await Taro.atMessage({
-      message: "加入俱乐部成功",
-      type: "success"
-    });
-    this.props.getActivities();
+  joinActivity = activity => async () => {
+    const { id, memberVisible } = activity;
+    if (memberVisible) {
+      await this.props.joinActivity(id);
+      await Taro.atMessage({
+        message: "加入俱乐部成功",
+        type: "success"
+      });
+      this.props.getActivities();
+    }
   };
 
   render() {
@@ -87,6 +90,12 @@ class Activity extends Component {
               <View className="card-head">
                 <Text className="text">{activity.clubName}</Text>
                 <View className="extra">
+                  <AtIcon
+                    prefixClass="icon"
+                    value="huore"
+                    size="14"
+                    color="red"
+                  />
                   {activity.recruiting && <Text>招募中</Text>}
                 </View>
               </View>
@@ -102,7 +111,7 @@ class Activity extends Component {
                     <AtButton
                       type="primary"
                       disabled={activity.joined}
-                      onClick={this.joinActivity(activity.id)}
+                      onClick={this.joinActivity(activity)}
                     >
                       {activity.joined ? "已加入" : "立即报名"}
                     </AtButton>

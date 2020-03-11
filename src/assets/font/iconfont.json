@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "9181730",
+      "name": "火热",
+      "font_class": "huore",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
       "icon_id": "2883155",
       "name": "加入",
       "font_class": "jiaru",

@@ -60,7 +60,7 @@ class ClubsChoose extends Component {
 
   next = () => {
     const { value } = this.state;
-    Taro.navigateTo({ url: `/pages/activity/form?id=${value}` });
+    Taro.navigateTo({ url: `/pages/activity/form?clubId=${value}` });
   };
 
   renderEmpty = () => {

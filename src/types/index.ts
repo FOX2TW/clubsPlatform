@@ -13,6 +13,7 @@ export interface Club {
 
 export interface ClubDetail extends Club {
   members: Array<User>;
+  createdAt: string;
 }
 
 export type ClubList = Array<Club>;
@@ -36,74 +37,75 @@ export interface ClubType {
 export type ClubTypes = Array<ClubType>;
 
 export interface Activity {
-  id?: number;
+  id?: any;
   clubName?: string;
   recruiting?: boolean;
   joined?: boolean;
-  status?: number;
+  status?: any;
+  memberVisible?: boolean;
   clubId: number;
   name: string;
   picture: string;
   endJoinDate: string;
   startDate: string;
+  joinEndTime?: string;
   endDate: string;
   limit: number | string;
   description: string;
-  open: boolean;
+  open: number;
   thumbsUp: number;
 }
 
 export interface ActivityDetail extends Activity {
-  joinedUser?: Array<User>;
+  joinedUser: Array<User>;
+  manager: boolean;
 }
 
 export type Activities = Array<Activity>;
 
 export interface ClubApply {
-  applyDate: string
-  creatorId: number
-  creatorName: string
-  id: number
-  introduction: string
-  name: string
-  picture: string
-  type: number
+  applyDate: string;
+  creatorId: number;
+  creatorName: string;
+  id: number;
+  introduction: string;
+  name: string;
+  picture: string;
+  type: number;
 }
 
 export interface JoinClubApply {
-  applicantName: string
-  applyDate: string
-  clubId: number
-  clubName: string
-  reason: string
+  applicantName: string;
+  applyDate: string;
+  clubId: number;
+  clubName: string;
+  reason: string;
 }
 
-
 export interface ClubApprove {
-  applyDate: string
-  creatorId: number
-  creatorName: string
-  id: number
-  introduction: string
-  name: string
-  picture: string
-  type: number
+  applyDate: string;
+  creatorId: number;
+  creatorName: string;
+  id: number;
+  introduction: string;
+  name: string;
+  picture: string;
+  type: number;
 }
 
 export interface JoinClubApprove {
-  applicantId: number
-  applicantName: string
-  applyDate: string
-  clubId: number
-  clubName: string
-  reason: string
-  recordId: number
+  applicantId: number;
+  applicantName: string;
+  applyDate: string;
+  clubId: number;
+  clubName: string;
+  reason: string;
+  recordId: number;
 }
 
-
 export interface JoinClub {
-  cellphone: string
-  clubId: number
-  reason: string
-  weChatNo: string
+  cellphone: string;
+  clubId: number;
+  reason: string;
+  weChatNo: string;
 }

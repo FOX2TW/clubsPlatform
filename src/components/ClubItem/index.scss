@@ -32,11 +32,12 @@
 
   .body {
     display: flex;
-    flex: 1;
     flex-flow: column;
     justify-content: flex-start;
     padding-left: 15px;
     padding-right: 15px;
+    width: 80%;
+    position: relative;
 
     .top {
       height: 60px;
@@ -44,6 +45,7 @@
       flex-flow: row;
       justify-content: space-between;
       align-items: flex-start;
+      width: 100%;
 
       .name {}
 
@@ -51,7 +53,6 @@
         display: flex;
         align-items: flex-start;
         justify-content: flex-start;
-        margin-top: -10px;
 
         .tag {
           margin-left: 5px;
@@ -61,13 +62,16 @@
 
     .bottom {
       display: flex;
+      width: 80%;
 
       .desc {
         font-size: small;
         overflow: hidden;
         text-overflow: fade;
-        white-space: normal;
-        color: #929292;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: rgba(0, 0, 0, 0.6);
+
       }
     }
   }

@@ -1,6 +1,7 @@
 import { ComponentClass } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
 import { View, Text, Image, Button } from "@tarojs/components";
+import { connect } from "@tarojs/redux";
 import {
   AtIcon,
   AtModal,
@@ -9,10 +10,13 @@ import {
   AtModalAction,
   AtInput
 } from "taro-ui";
+import { User } from "@/types/index";
 
 import "./setting.scss";
 
-type PageStateProps = {};
+type PageStateProps = {
+  userInfo: User;
+};
 type PageDispatchProps = {};
 type PageOwnProps = {};
 type PageState = {};
@@ -21,6 +25,9 @@ interface Setting {
   props: IProps;
 }
 
+@connect(({ users }) => ({
+  userInfo: users.userInfo
+}))
 class Setting extends Component {
   config: Config = {
     navigationBarTitleText: "设置"
@@ -46,12 +53,13 @@ class Setting extends Component {
   };
 
   render() {
+    const { userInfo } = this.props;
     return (
       <View className="setting-container">
         <View className="item" onClick={this.openModal}>
           <Text className="title">昵称</Text>
           <View className="extra">
-            <Text>Jiaxin</Text>
+            <Text>{userInfo.username}</Text>
 
             <AtIcon value="chevron-right" size="20" color="#c8c8c8" />
           </View>
@@ -59,7 +67,7 @@ class Setting extends Component {
         <View className="item">
           <Text className="title"> 头像</Text>
           <View className="extra">
-            <Image src={""} className="thumb" />
+            <Image src={userInfo.profileImagePath || ""} className="thumb" />
             <AtIcon value="chevron-right" size="20" color="#c8c8c8" />
           </View>
         </View>
@@ -76,7 +84,7 @@ class Setting extends Component {
             />
           </AtModalContent>
           <AtModalAction>
-            <Button onClick={this.closeModal}>取消</Button>{" "}
+            <Button onClick={this.closeModal}>取消</Button>
             <Button>确定</Button>
           </AtModalAction>
         </AtModal>

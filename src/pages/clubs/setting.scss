@@ -1,0 +1,18 @@
+.club-setting-container {
+  padding-top: 20px;
+
+  .item {
+    background-color: white;
+    border-bottom: 1px solid #f1f1f1;
+    padding: 30px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 28px;
+    color: rgba(0, 0, 0, 0.7);
+
+    &:active {
+      opacity: 0.7;
+    }
+  }
+}

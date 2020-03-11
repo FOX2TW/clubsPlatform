@@ -3,7 +3,11 @@ import {
   EDIT_CLUB,
   GET_CLUB_DETAIL,
   GET_CLUBS,
-  GET_MY_CLUBS, CREATE_CLUB, GET_CLUB_APPLY, GET_JOIN_CLUB_APPLY, GET_CLUB_APPROVE, GET_JOIN_CLUB_APPROVE
+  GET_MY_CLUBS,
+  GET_CLUB_APPLY,
+  GET_JOIN_CLUB_APPLY,
+  GET_CLUB_APPROVE,
+  GET_JOIN_CLUB_APPROVE
 } from "@/constants/index";
 
 const INITIAL_STATE = {
@@ -14,7 +18,7 @@ const INITIAL_STATE = {
   clubApply: [],
   joinClubApply: [],
   clubApprove: [],
-  joinClubApprove: [],
+  joinClubApprove: []
 };
 
 export default function clubs(state = INITIAL_STATE, action) {
@@ -32,12 +36,10 @@ export default function clubs(state = INITIAL_STATE, action) {
     case GET_CLUB_DETAIL:
       return {
         ...state,
-        clubDetail: action.payload
-      };
-    case EDIT_CLUB:
-      return {
-        ...state,
-        clubDetail: { ...action.clubDetail }
+        clubDetail: {
+          ...state.clubDetail,
+          [action.payload.id]: action.payload.detail
+        }
       };
     case GET_MY_CLUBS:
       return {

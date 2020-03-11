@@ -15,9 +15,8 @@ import {
   AtMessage
 } from "taro-ui";
 
-import { find } from "lodash";
-import { ClubList, Activity, Club } from "@/types/index";
-import { createActivity } from "@/actions/activity";
+import { ClubList, Activity, Club, ActivityDetail } from "@/types/index";
+import { createActivity, editActivity } from "@/actions/activity";
 import DatePicker from "@/components/DatePicker/index";
 
 import "./form.scss";
@@ -28,9 +27,13 @@ const dateFormat = (value, format = "YYYY-MM-DD HH:mm:ss") => {
 
 type PageStateProps = {
   myClubs: ClubList;
+  activity: {
+    [key: string]: ActivityDetail;
+  };
 };
 type PageDispatchProps = {
   createActivity: (data: Activity) => any;
+  editActivity: (data: Activity) => any;
 };
 type PageOwnProps = {};
 type PageState = {};
@@ -40,11 +43,15 @@ interface ActivityForm {
 }
 
 @connect(
-  ({ clubs }) => ({
-    myClubs: clubs.myClubs
+  ({ clubs, activity }) => ({
+    myClubs: clubs.myClubs,
+    activity: activity.activity
   }),
   dispatch =>
-    bindActionCreators({ createActivity } as PageDispatchProps, dispatch)
+    bindActionCreators(
+      { createActivity, editActivity } as PageDispatchProps,
+      dispatch
+    )
 )
 class ActivityForm extends Component {
   config: Config = {
@@ -52,7 +59,9 @@ class ActivityForm extends Component {
   };
 
   state = {
-    open: true,
+    clubId: Infinity,
+    clubName: "",
+    open: 1,
     isLimit: false,
     picture: "",
     name: "",
@@ -60,40 +69,94 @@ class ActivityForm extends Component {
     description: "",
     address: "",
     files: [],
-    startDate: "",
-    endDate: "",
-    endJoinDate: "",
-    limit: ""
+    startDate: 0,
+    endDate: 0,
+    endJoinDate: 0,
+    limit: 0
   };
 
-  get currentClub() {
-    const { id } = this.$router.params;
-    const { myClubs } = this.props;
-    return find(myClubs, club => club.id === Number(id)) as Club;
+  componentDidMount() {
+    this.initEditPage();
   }
 
+  getCurrentClub = () => {
+    const { clubId } = this.$router.params;
+    const { myClubs } = this.props;
+    const club = myClubs.find(club => club.id === Number(clubId)) as Club;
+
+    this.setState({
+      clubName: club.name,
+      clubId: club.id
+    });
+  };
+
+  initEditPage = () => {
+    const { activityId } = this.$router.params;
+    if (activityId) {
+      const activityDetail = this.props.activity[activityId];
+      this.setState({
+        clubId: activityDetail.clubId,
+        clubName: activityDetail.clubName,
+        name: activityDetail.name,
+        picture: activityDetail.picture,
+        endJoinDate: dayjs(activityDetail.endJoinDate).valueOf(),
+        startDate: dayjs(activityDetail.startDate).valueOf(),
+        endDate: dayjs(activityDetail.endDate).valueOf(),
+        limit: activityDetail.limit,
+        description: activityDetail.description,
+        open: activityDetail.open,
+        thumbsUp: activityDetail.thumbsUp,
+        isLimit: activityDetail.limit === 0,
+        files: [
+          {
+            url: activityDetail.picture
+          }
+        ]
+      });
+    } else {
+      this.getCurrentClub();
+    }
+  };
+
   onSubmit = async () => {
-    const { id = Infinity } = this.currentClub;
+    const { activityId } = this.$router.params;
     const { isLimit, limit } = this.state;
+    Taro.showLoading({ title: "loading..." });
     const data: Activity = {
-      clubId: id,
+      clubId: this.state.clubId,
+      clubName: this.state.clubName,
       name: this.state.name,
       picture: this.state.picture,
       endJoinDate: dateFormat(this.state.endJoinDate),
       startDate: dateFormat(this.state.startDate),
-      endDate: dateFormat(this.state.startDate),
+      endDate: dateFormat(this.state.endDate),
       limit: isLimit ? Number(!isLimit) : limit,
       description: this.state.description,
       open: this.state.open,
       thumbsUp: 0
     };
-    await this.props.createActivity(data);
-    await Taro.atMessage({
-      message: "发布活动成功",
-      type: "success",
-      duration: 500
-    });
-    Taro.switchTab({ url: "/pages/activity/index" });
+
+    if (activityId) {
+      const newData = { ...data, activityId };
+      await this.props.editActivity(newData);
+      await Taro.atMessage({
+        message: "编辑活动成功",
+        type: "success",
+        duration: 500
+      });
+      Taro.navigateBack();
+    } else {
+      await this.props.createActivity(data);
+      await Taro.atMessage({
+        message: "发布活动成功",
+        type: "success",
+        duration: 500
+      });
+      Taro.switchTab({
+        url: "/pages/activity/index"
+      });
+    }
+    Taro.hideLoading();
   };
   nameInputChange = name => {
     this.setState({ name });
@@ -136,15 +199,26 @@ class ActivityForm extends Component {
   };
 
   render() {
-    const { name, description, files, open, limit, isLimit } = this.state;
-
+    const {
+      name,
+      description,
+      files,
+      open,
+      limit,
+      isLimit,
+      clubName,
+      startDate,
+      endDate,
+      endJoinDate
+    } = this.state;
+    const { activityId } = this.$router.params;
     return (
       <View className="activity-form-container">
         <AtMessage />
         <AtForm onSubmit={this.onSubmit}>
           <View className="form-extra">
             <Text className="label">俱乐部：</Text>
-            <Text className="text">{this.currentClub.name}</Text>
+            <Text className="text">{clubName}</Text>
           </View>
           <View className="form-item">
             <View className="label-wrap">
@@ -178,7 +252,7 @@ class ActivityForm extends Component {
               <Text className="required">*</Text>
               <Text className="label">开始时间：</Text>
             </View>
-            <DatePicker onChange={this.startDateChange} />
+            <DatePicker onChange={this.startDateChange} value={startDate} />
           </View>
 
           <View className="form-item">
@@ -186,7 +260,7 @@ class ActivityForm extends Component {
               <Text className="required">*</Text>
               <Text className="label">结束时间：</Text>
             </View>
-            <DatePicker onChange={this.endDateChange} />
+            <DatePicker onChange={this.endDateChange} value={endDate} />
           </View>
 
           <View className="form-item">
@@ -194,7 +268,7 @@ class ActivityForm extends Component {
               <Text className="required">*</Text>
               <Text className="label">报名截止时间：</Text>
             </View>
-            <DatePicker onChange={this.endJoinDateChange} />
+            <DatePicker onChange={this.endJoinDateChange} value={endJoinDate} />
           </View>
 
           <View className="form-item">
@@ -229,8 +303,8 @@ class ActivityForm extends Component {
             </View>
             <AtRadio
               options={[
-                { label: "公开", value: true },
-                { label: "不公开", value: false }
+                { label: "公开", value: 1 },
+                { label: "不公开", value: 0 }
               ]}
               value={open}
               onClick={this.radioChange}
@@ -253,7 +327,7 @@ class ActivityForm extends Component {
           </View>
 
           <AtButton formType="submit" type="primary">
-            发布活动
+            {activityId ? "编辑活动" : "发布活动"}
           </AtButton>
         </AtForm>
       </View>

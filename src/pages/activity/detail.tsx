@@ -11,10 +11,13 @@ import {
   cancelJoinActivity
 } from "@/actions/activity";
 import { ActivityDetail } from "@/types/index";
+import { get } from "@/utils/tools";
 import "./detail.scss";
 
 type PageStateProps = {
-  activity: ActivityDetail;
+  activity: {
+    [key: string]: ActivityDetail;
+  };
 };
 
 type PageDispatchProps = {
@@ -53,48 +56,76 @@ class Detail extends Component {
     // enablePullDownRefresh: true
   };
 
-  componentDidMount() {
+  componentDidShow() {
     const { id } = this.$router.params;
     this.props.getActivityDetail(id);
   }
 
-  handleJoin = joined => async () => {
+  handleJoin = async () => {
     const { id } = this.$router.params;
-    try {
-      if (joined) {
-        await this.props.cancelJoinActivity(id);
-      } else {
-        await this.props.joinActivity(id);
-      }
-      Taro.atMessage({
-        message: joined ? "取消活动成功" : "加入活动成功",
-        type: "success"
+    const { activity } = this.props;
+    const currentActivity = get(activity, id, {});
+    const { joined, memberVisible, clubName, clubId } = currentActivity;
+    if (memberVisible) {
+      try {
+        if (joined) {
+          await this.props.cancelJoinActivity(id);
+        } else {
+          await this.props.joinActivity(id);
+        }
+        Taro.atMessage({
+          message: joined ? "取消活动成功" : "加入活动成功",
+          type: "success"
+        });
+        this.props.getActivityDetail(id);
+      } catch (err) {}
+    } else {
+      Taro.showModal({
+        title: "俱乐部提示",
+        content: `您还没有加入${clubName},请先申请加入吧`,
+        confirmText: "立即申请",
+        success: ({ confirm }) => {
+          if (confirm) {
+            Taro.navigateTo({
+              url: `/pages/clubs/detail?clubId=${clubId}&isManager=false&isJoin=false`
+            });
+          }
+        }
       });
-      this.props.getActivityDetail(id);
-    } catch (err) {}
+    }
+  };
+
+  editActivity = () => {
+    const { id } = this.$router.params;
+    const { activity } = this.props;
+    const currentActivity = get(activity, id, {});
+    Taro.navigateTo({
+      url: `/pages/activity/form?activityId=${currentActivity.id}`
+    });
   };
 
   render() {
+    const { id } = this.$router.params;
     const { activity } = this.props;
-    console.log(activity);
+    const currentActivity = get(activity, id, {});
     return (
       <View className="activity-detail-container">
         <AtMessage />
-        <Image className="banner" src={activity.picture}></Image>
+        <Image className="banner" src={currentActivity.picture}></Image>
         <View className="content">
           <View className="item">
             <View className="label-wrap">
               <Text className="title">俱乐部</Text>
               <Text>：</Text>
             </View>
-            <Text className="text">{activity.clubName}</Text>
+            <Text className="text">{currentActivity.clubName}</Text>
           </View>
           <View className="item">
             <View className="label-wrap">
               <Text className="title">活动名称</Text>
               <Text>：</Text>
             </View>
-            <Text className="text">{activity.name}</Text>
+            <Text className="text">{currentActivity.name}</Text>
           </View>
           <View className="item">
             <View className="label-wrap">
@@ -102,8 +133,9 @@ class Detail extends Component {
               <Text>：</Text>
             </View>
             <Text className="text">
-              {dayjs(activity.startDate).format("MM/DD HH:mm")} -
-              {dayjs(activity.endDate).format("MM/DD HH:mm")}
+              {dayjs(currentActivity.startDate).format("MM/DD HH:mm")}
+              <Text> - </Text>
+              {dayjs(currentActivity.endDate).format("MM/DD HH:mm")}
             </Text>
           </View>
           <View className="item">
@@ -112,7 +144,7 @@ class Detail extends Component {
               <Text>：</Text>
             </View>
             <Text className="text">
-              {dayjs(activity.startDate).format("YYYY-MM-DD HH:mm")}
+              {dayjs(currentActivity.endJoinDate).format("YYYY-MM-DD HH:mm")}
             </Text>
           </View>
           <View className="item">
@@ -121,7 +153,18 @@ class Detail extends Component {
               <Text>：</Text>
             </View>
             <Text className="text">
-              {activity.limit === 0 ? "不限制" : `${activity.limit}人`}
+              {currentActivity.limit === 0
+                ? "不限制"
+                : `${currentActivity.limit}人`}
+            </Text>
+          </View>
+          <View className="item">
+            <View className="label-wrap">
+              <Text className="title">公开状态</Text>
+              <Text>：</Text>
+            </View>
+            <Text className="text">
+              {currentActivity.open ? "公开" : "不公开"}
             </Text>
           </View>
           <View className="item">
@@ -129,7 +172,7 @@ class Detail extends Component {
               <Text className="title">活动介绍</Text>
               <Text>：</Text>
             </View>
-            <Text className="text">{activity.description}</Text>
+            <Text className="text">{currentActivity.description}</Text>
           </View>
           <View className="item">
             <View className="label-wrap">
@@ -137,7 +180,7 @@ class Detail extends Component {
               <Text>：</Text>
             </View>
             <View className="user-wrap">
-              {activity.joinedUser.map(user => (
+              {currentActivity.joinedUser.map(user => (
                 <Text className="user" key={user.id}>
                   {user.username}
                 </Text>
@@ -145,20 +188,38 @@ class Detail extends Component {
             </View>
           </View>
         </View>
-        {activity.status === 0 && (
-          <AtButton
-            className="btn"
-            type="primary"
-            onClick={this.handleJoin(activity.joined)}
-          >
-            {activity.joined ? "取消报名" : "立即报名"}
+
+        {currentActivity.status === 0 && !currentActivity.manager && (
+          <AtButton className="btn" type="primary" onClick={this.handleJoin}>
+            {currentActivity.joined ? "取消报名" : "立即报名"}
           </AtButton>
         )}
-        {activity.status !== 0 && (
+        {currentActivity.status === 1 && !currentActivity.manager && (
+          <AtButton className="btn" type="primary" disabled>
+            招募已结束
+          </AtButton>
+        )}
+
+        {currentActivity.status === 2 && (
+          <AtButton className="btn " type="primary" disabled>
+            活动已开始
+          </AtButton>
+        )}
+        {currentActivity.status === 3 && (
           <AtButton className="btn disabled" disabled>
-            {activity.status === 2 ? "活动已结束" : "活动已开始"}
+            活动已结束
           </AtButton>
         )}
+        {(currentActivity.status === 0 || currentActivity.status === 1) &&
+          currentActivity.manager && (
+            <AtButton
+              className="btn"
+              type="primary"
+              onClick={this.editActivity}
+            >
+              编辑活动
+            </AtButton>
+          )}
       </View>
     );
   }

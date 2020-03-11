@@ -25,10 +25,11 @@ class App extends Component {
   config: Config = {
     pages: [
       "pages/activity/index",
-      "pages/home/index",
       "pages/clubs/index",
       "pages/clubs/detail",
-      "pages/clubs/users",
+      "pages/clubs/setting",
+      "pages/home/index",
+      "pages/clubs/member",
       "pages/clubs/form",
       "pages/clubs/choose",
       "pages/clubs/apply",
@@ -37,7 +38,8 @@ class App extends Component {
       "pages/user/apply",
       "pages/user/approve",
       "pages/activity/form",
-      "pages/activity/detail"
+      "pages/activity/detail",
+      "pages/user/change"
     ],
     window: {
       backgroundTextStyle: "light",

@@ -1,13 +1,17 @@
 .index {
   flex-direction: column;
   width: 100%;
+
   .line-limit-length {
     overflow: hidden;
     text-overflow: fade;
     white-space: nowrap;
   }
 
-  .tab-content{
-
+  .swiper-item {
+    width: 100%;
+    height: 300px;
   }
+
+  .tab-content {}
 }

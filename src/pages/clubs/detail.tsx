@@ -1,21 +1,32 @@
 import Taro, { Component, Config } from "@tarojs/taro";
-import { View, Image } from "@tarojs/components";
+import { View, Image, Text } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import { ComponentClass } from "react";
-import {AtButton, AtCard, AtList, AtListItem} from "taro-ui";
-import {quitClub, getClubDetail, getClubTypes} from "@/actions/clubs";
+import { AtButton, AtTag, AtAvatar, AtIcon, AtFab } from "taro-ui";
+import { getClubDetail, getClubTypes } from "@/actions/clubs";
+import { getClubActivity } from "@/actions/activity";
+import { ClubDetail, ClubTypes, Activities } from "@/types/index";
+import { bindActionCreators } from "redux";
+import dayjs from "dayjs";
+import Empty from "@/components/Empty/index";
+import { get } from "@/utils/tools";
+
 import "./detail.scss";
-import {ClubDetail, ClubTypes} from "@/types/index";
-import {bindActionCreators} from "redux";
 
 type PageStateProps = {
-    clubDetail: ClubDetail;
-    types: ClubTypes;
+  clubDetail: {
+    [key: number]: ClubDetail;
+  };
+  types: ClubTypes;
+  clubActivity: {
+    [key: number]: Activities;
+  };
 };
 type PageDispatchProps = {
   getClubDetail: (id) => void;
   getClubTypes: () => void;
-  quitClub: (id) => void;
+
+  getClubActivity: (id) => any;
 };
 type PageOwnProps = {};
 type PageState = {};
@@ -26,16 +37,17 @@ interface Detail {
 }
 
 @connect(
-  ({ clubs }) => ({
+  ({ clubs, activity }) => ({
     clubDetail: clubs.clubDetail,
-    types: clubs.types
+    types: clubs.types,
+    clubActivity: activity.clubActivity
   }),
   dispatch =>
     bindActionCreators(
       {
         getClubDetail,
         getClubTypes,
-        quitClub
+        getClubActivity
       } as PageDispatchProps,
       dispatch
     )
@@ -45,136 +57,149 @@ class Detail extends Component {
     navigationBarTitleText: "俱乐部详情"
   };
 
+  get clubTypes() {
+    return this.props.types.reduce((a, b) => {
+      return { ...a, [b.id]: b.name };
+    }, {});
+  }
+
+  componentDidShow() {
+    const { clubId } = this.$router.params;
+    this.props.getClubDetail(clubId);
+    this.props.getClubTypes();
+    this.props.getClubActivity(clubId);
+  }
+
   navigate = url => () => {
     Taro.navigateTo({ url });
   };
 
-  quitClub = ()=> {
-    this.props.quitClub(this.props.clubDetail.id);
-    Taro.navigateBack()
-  }
-
-  User(user) {
-    return (
-      <View key={user.id} className="user">
-        {/* <AtAvatar
-          className="avatar"
-          circle
-          image={user.profileImagePath}
-        />*/}
-        <View className="name">{user.username}</View>
-      </View>
-    );
-  }
-
-  componentWillMount(): void {
-    this.props.getClubDetail(parseInt(this.$router.params["clubId"]));
-    this.props.getClubType();
-  }
-
   render() {
-    const detail = this.props.clubDetail;
-    const types = this.props.types.reduce((a,b) => {return {...a, [b.id]: b.name}}, {});
-    const isManager = this.$router.params["isManager"];
-    const isJoin = this.$router.params["isJoin"];
-    console.log("isManager:",isManager,"   isJoin:",isJoin);
+    const { clubId } = this.$router.params;
+    const { clubActivity, clubDetail } = this.props;
+    const detail = get(clubDetail, clubId, {});
+    const activityList = get(clubActivity, clubId, []);
     return (
-      <View className="detail-container">
-        <Image
-          className="at-row"
-          src={detail.picture}
-        />
-
-        <AtCard
-          className="base-info m-t-10"
-          title={detail.name}
-          // thumb={require(`./../../assets/images/club/${detail.photo}.jpg`)}
-          extra={isManager=="true" ? "编辑" : ""}
-          onClick={() => isManager=="true" && Taro.navigateTo({ url: `/pages/clubs/form?id=${this.$router.params["clubId"]}` })}
-        >
-          <View className="info-list">
-            <View className="text-wrapper">
-              <View className="label" style="align-self: center;">
-                类别：
-              </View>
-              <View className="text" style="align-self: center;">
-                <AtButton
-                  type="secondary"
-                  customStyle="height: 20px; padding-top:0; line-height: 40rpx;"
-                  size="small"
-                >
-                  {types[detail.type]}
-                </AtButton>
-              </View>
+      <View className="club-detail-container">
+        <Image className="picture" src={detail.picture} />
+        <View className="card-wrapper">
+          <View className="info-title">
+            <Text>基本信息</Text>
+          </View>
+          <View className="item">
+            <View className="label">
+              <Text>俱乐部名称</Text>
+              <Text>：</Text>
             </View>
-            <View className="text-wrapper">
-              <View className="label">创建时间：</View>
-              <View className="text">{detail.createDate}</View>
-            </View>
-            {detail.address && <View className="text-wrapper">
-              <View className="label">地址：</View>
-              <View className="text">{detail.address}</View>
-            </View>}
-            <View className="text-wrapper">
-              <View className="label">简介：</View>
-              <View className="text">{detail.introduction}</View>
+            <View className="text">
+              <Text>{detail.name}</Text>
             </View>
           </View>
-        </AtCard>
-
-        <AtCard
-          title="会员"
-          extra="所有会员"
-          className='m-t-10'
-          // thumb={require('./../../assets/images/club/avatar.jpg')}
-          onClick={this.navigate(`/pages/clubs/users?isManager=${isManager}`)}
-        >
-          <View className="users">
-            {detail.members && detail.members.length > 0
-              ? detail.members.map(user => this.User(user))
-              : "还没有会员"}
+          <View className="item">
+            <View className="label">
+              <Text>类型</Text>
+              <Text>：</Text>
+            </View>
+            <View className="text">
+              <AtTag size="small" active>
+                {this.clubTypes[detail.type]}
+              </AtTag>
+            </View>
           </View>
-        </AtCard>
-
-        <AtCard
-          title="活动"
-          extra="历史活动"
-          className='m-t-10'
-          // thumb={require('./../../assets/images/club/avatar.jpg')}
-        >
-          <View className="activity">
-            <AtList>
-              <AtListItem
-                title="活动1"
-                onClick={() => console.log("跳转到活动详情")}
-              />
-              <AtListItem title="活动2" arrow="right" />
-              <AtListItem title="活动2" extraText="详细信息" />
-              <AtListItem title="活动2" disabled extraText="详细信息" />
-            </AtList>
+          <View className="item">
+            <View className="label">
+              <Text>地区</Text>
+              <Text>：</Text>
+            </View>
+            <View className="text">暂无</View>
           </View>
-        </AtCard>
-        <View>
-          {isJoin !== "true" && <View className='join'>
-            <AtButton
-              type='primary'
-              size='normal'
-              onClick={()=> Taro.navigateTo({url: `/pages/clubs/apply?clubId=${detail.id}`})}
-            >
-              申请加入
-            </AtButton>
-          </View>}
-          {isJoin === "true" &&
-          <AtButton
-            className='quit'
-            customStyle='color:red;border-color:red;'
-            type='secondary'
-            size='normal'
-            onClick={this.quitClub}
-          >
-            退出俱乐部
-          </AtButton>}
+          <View className="item">
+            <View className="label">
+              <Text>创建时间</Text>
+              <Text>：</Text>
+            </View>
+            <View className="text">
+              <Text>
+                {dayjs(detail.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+              </Text>
+            </View>
+          </View>
         </View>
+        <View className="card-wrapper">
+          <View className="info-title">
+            <Text>俱乐部介绍</Text>
+          </View>
+          <View className="intro">
+            <Text>{detail.introduction}</Text>
+          </View>
+        </View>
+
+        <View className="card-wrapper">
+          <View className="info-title">
+            <Text>俱乐部会员</Text>
+          </View>
+          <View className="user-wrapper">
+            <View className="users">
+              {get(detail, "members", []).map(user => (
+                <View className="user-item" key={user.id}>
+                  <AtAvatar circle image={user.profileImagePath}></AtAvatar>
+                  <Text>{user.username}</Text>
+                </View>
+              ))}
+            </View>
+            <View
+              className="more"
+              onClick={this.navigate(`/pages/clubs/member?clubId=${detail.id}`)}
+            >
+              <Text>更多会员</Text>
+              <AtIcon value="chevron-right" size="20"></AtIcon>
+            </View>
+          </View>
+        </View>
+        <View className="card-wrapper">
+          <View className="info-title">
+            <Text>俱乐部活动</Text>
+          </View>
+
+          {activityList.map(activity => (
+            <View
+              className="extra-item"
+              key={activity.id}
+              onClick={this.navigate(
+                `/pages/activity/detail?id=${activity.id}`
+              )}
+            >
+              <View className="content">
+                <Text className="name">{activity.name}</Text>
+                <Text className="des">{activity.description}</Text>
+              </View>
+              <View className="right">
+                {activity.status === 0 && <Text className="note">招募中</Text>}
+                <AtIcon value="chevron-right" size="20"></AtIcon>
+              </View>
+            </View>
+          ))}
+          {activityList.length === 0 && <Empty />}
+        </View>
+        {!detail.isJoin && (
+          <AtButton
+            type="primary"
+            className="join-btn"
+            onClick={this.navigate(`/pages/clubs/apply?clubId=${detail.id}`)}
+          >
+            申请加入
+          </AtButton>
+        )}
+        {detail.isJoin && (
+          <View
+            className="fab"
+            onClick={this.navigate(`/pages/clubs/setting?clubId=${detail.id}`)}
+          >
+            <AtFab>
+              <Text className="at-fab__icon at-icon at-icon-settings"></Text>
+            </AtFab>
+          </View>
+        )}
       </View>
     );
   }

@@ -52,12 +52,16 @@ class Activity extends Component {
     Taro.navigateTo({ url: `/pages/activity/detail?id=${id}` });
   };
 
-  componentDidMount() {
+  componentDidShow() {
     this.props.getActivities();
   }
 
+  get sortActivities(): Activities {
+    return this.props.activities.sort((pre, next) => pre.status - next.status);
+  }
+
   joinActivity = activity => async () => {
-    const { id, memberVisible } = activity;
+    const { id, memberVisible, clubName, clubId } = activity;
     if (memberVisible) {
       await this.props.joinActivity(id);
       await Taro.atMessage({
@@ -65,11 +69,23 @@ class Activity extends Component {
         type: "success"
       });
       this.props.getActivities();
+    } else {
+      Taro.showModal({
+        title: "俱乐部提示",
+        content: `您还没有加入${clubName},请先申请加入吧`,
+        confirmText: "立即申请",
+        success: ({ confirm }) => {
+          if (confirm) {
+            Taro.navigateTo({
+              url: `/pages/clubs/detail?clubId=${clubId}`
+            });
+          }
+        }
+      });
     }
   };
 
   render() {
-    const { activities } = this.props;
     return (
       <View className="activity-container">
         <AtMessage />
@@ -85,19 +101,21 @@ class Activity extends Component {
           <View className="shadow" />
         </View>
         <View className="list">
-          {activities.map((activity: IActivity) => (
+          {this.sortActivities.map((activity: IActivity) => (
             <View className="card" key={activity.id}>
               <View className="card-head">
                 <Text className="text">{activity.clubName}</Text>
-                <View className="extra">
-                  <AtIcon
-                    prefixClass="icon"
-                    value="huore"
-                    size="14"
-                    color="red"
-                  />
-                  {activity.recruiting && <Text>招募中</Text>}
-                </View>
+                {activity.status === 0 && (
+                  <View className="extra">
+                    <AtIcon
+                      prefixClass="icon"
+                      value="huore"
+                      size="14"
+                      color="red"
+                    />
+                    <Text>招募中</Text>
+                  </View>
+                )}
               </View>
               <View className="content">
                 <View className="intro">
@@ -113,15 +131,22 @@ class Activity extends Component {
                       disabled={activity.joined}
                       onClick={this.joinActivity(activity)}
                     >
-                      {activity.joined ? "已加入" : "立即报名"}
+                      {activity.joined ? "已参加" : "立即报名"}
                     </AtButton>
                   )}
                   {activity.status === 1 && (
-                    <AtButton disabled className="disabled">
+                    <AtButton type="primary" disabled>
+                      招募结束
+                    </AtButton>
+                  )}
+
+                  {activity.status === 2 && (
+                    <AtButton type="primary" disabled>
                       已开始
                     </AtButton>
                   )}
-                  {activity.status === 2 && (
+
+                  {activity.status === 3 && (
                     <AtButton disabled className="disabled">
                       已结束
                     </AtButton>
@@ -135,7 +160,6 @@ class Activity extends Component {
                 </Text>
                 <View onClick={this.navigate(activity.id)}>
                   <Text>查看详情</Text>
-                  {/* arrow-right */}
                   <AtIcon value="chevron-right" size="20" />
                 </View>
               </View>

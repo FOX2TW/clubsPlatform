@@ -1,23 +1,30 @@
-import {ComponentClass} from "react";
-import Taro, {Component, Config} from "@tarojs/taro";
-import {Button, Text, View} from "@tarojs/components";
-import {AtIcon} from "taro-ui";
-import {ClubApply, JoinClubApply} from "@/types/index";
-import {connect} from "@tarojs/redux";
-import {cancelCreateClub, cancelJoinClub, getClubApply, getJoinClubApply} from "@/actions/clubs";
-import {bindActionCreators} from "redux";
+import { ComponentClass } from "react";
+import Taro, { Component, Config } from "@tarojs/taro";
+import { Button, Text, View } from "@tarojs/components";
+import { AtIcon } from "taro-ui";
+import { ClubApply, JoinClubApply } from "@/types/index";
+import { connect } from "@tarojs/redux";
+import {
+  cancelCreateClub,
+  cancelJoinClub,
+  getClubApply,
+  getJoinClubApply
+} from "@/actions/clubs";
+import { bindActionCreators } from "redux";
+import Empty from "@/components/Empty/index";
+import dayjs from "dayjs";
 
 import "./apply.scss";
 
 type PageStateProps = {
-  clubApply: Array<ClubApply>
-  joinClubApply: Array<JoinClubApply>
+  clubApply: Array<ClubApply>;
+  joinClubApply: Array<JoinClubApply>;
 };
 type PageDispatchProps = {
-  getClubApply: () => void
-  getJoinClubApply: () => void
-  cancelCreateClub: (id) => void
-  cancelJoinClub: (id) => void
+  getClubApply: () => void;
+  getJoinClubApply: () => void;
+  cancelCreateClub: (id) => void;
+  cancelJoinClub: (id) => void;
 };
 type PageOwnProps = {};
 type PageState = {};
@@ -28,10 +35,11 @@ interface Approve {
 }
 
 @connect(
-  ({clubs}) => ({
+  ({ clubs }) => ({
     clubApply: clubs.clubApply,
     joinClubApply: clubs.joinClubApply
-  }), dispatch =>
+  }),
+  dispatch =>
     bindActionCreators(
       {
         getClubApply,
@@ -49,18 +57,18 @@ class Approve extends Component {
 
   componentWillMount(): void {
     this.props.getClubApply();
-    this.props.getJoinClubApply()
+    this.props.getJoinClubApply();
   }
 
   cancelCreateClub = id => {
-    this.props.cancelCreateClub(id)
+    this.props.cancelCreateClub(id);
   };
 
   cancelJoinClub = id => {
-    this.props.cancelJoinClub(id)
-  }
+    this.props.cancelJoinClub(id);
+  };
 
-  renderClubApproveCard = (item) => {
+  renderClubApproveCard = item => {
     return (
       <View className="card">
         <View className="card-title-wrap">
@@ -73,7 +81,9 @@ class Approve extends Component {
             />
             <Text className="title">俱乐部创建</Text>
           </View>
-          <Text className="extra">{item.applyDate}</Text>
+          <Text className="extra">
+            {dayjs(item.applyDate).format("YYYY-MM-DD HH:mm:ss")}
+          </Text>
         </View>
         <View className="card-content">
           <View className="text-wrapper">
@@ -90,13 +100,18 @@ class Approve extends Component {
           </View>
         </View>
         <View className="card-actions">
-          <Button className="btn" onClick={() => this.cancelCreateClub(item.id)}>撤销</Button>
+          <Button
+            className="btn"
+            onClick={() => this.cancelCreateClub(item.id)}
+          >
+            撤销
+          </Button>
         </View>
       </View>
     );
   };
 
-  renderMemberApproveCard = (item) => {
+  renderMemberApproveCard = item => {
     return (
       <View className="card">
         <View className="card-title-wrap">
@@ -109,7 +124,9 @@ class Approve extends Component {
             />
             <Text className="title">会员加入</Text>
           </View>
-          <Text className="extra">{item.applyDate}</Text>
+          <Text className="extra">
+            {dayjs(item.applyDate).format("YYYY-MM-DD HH:mm:ss")}
+          </Text>
         </View>
         <View className="card-content">
           <View className="text-wrapper">
@@ -126,7 +143,12 @@ class Approve extends Component {
           </View>
         </View>
         <View className="card-actions">
-          <Button className="btn" onClick={() => this.cancelJoinClub(item.clubId)}>撤销</Button>
+          <Button
+            className="btn"
+            onClick={() => this.cancelJoinClub(item.clubId)}
+          >
+            撤销
+          </Button>
         </View>
       </View>
     );
@@ -138,16 +160,13 @@ class Approve extends Component {
     return (
       <View className="approve-container">
         {applyList.map(item => (
-          <View key={item.id}>
-            {this.renderClubApproveCard(item)}
-          </View>
+          <View key={item.id}>{this.renderClubApproveCard(item)}</View>
         ))}
 
         {joinList.map(item => (
-          <View key={item.clubId}>
-            {this.renderMemberApproveCard(item)}
-          </View>
+          <View key={item.clubId}>{this.renderMemberApproveCard(item)}</View>
         ))}
+        {applyList.length === 0 && joinList.length === 0 && <Empty />}
       </View>
     );
   }

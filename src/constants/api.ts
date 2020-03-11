@@ -10,8 +10,10 @@ export default {
   getInvolvedActivities: "/api/activity/user/<userId>",
   getUserInfo: "/api/user/<userId>",
   createActivity: "/api/activity",
+  editActivity: "/api/activity",
   getActivities: "/api/activity/list/visible",
   getActivityDetail: "/api/activity/<activityId>",
+  getClubActivity: "/api/activity/club/<clubId>",
   quitClub: "/api/club/<clubId>/member",
   // 我的申请
   getClubApply: "/api/club/application",

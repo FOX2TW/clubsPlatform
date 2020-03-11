@@ -10,3 +10,19 @@ export const getWeek = () => {
   );
   return weeks[new Date().getDay()];
 };
+
+export function convPath(path) {
+  if (!Array.isArray(path)) {
+    return path.split(/[.\[\]]/).filter(v => v);
+  }
+  return path;
+}
+
+export function get(obj, path, dft) {
+  let arrPath = convPath(String(path));
+  return (
+    arrPath.reduce((acc, cur) => {
+      return (acc || {})[cur];
+    }, obj) || dft
+  );
+}

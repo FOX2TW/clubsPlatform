@@ -1,27 +1,30 @@
 import { ComponentClass } from "react";
+import { AtIcon } from "taro-ui";
 import Taro, { Component, Config } from "@tarojs/taro";
 import { View, Text, Button } from "@tarojs/components";
-import { AtIcon } from "taro-ui";
-import "./approve.scss";
-import {connect} from "@tarojs/redux";
+import dayjs from "dayjs";
+import { connect } from "@tarojs/redux";
 import {
   approveClub,
   approveJoinClub,
   getClubApprove,
   getJoinClubApprove
 } from "@/actions/clubs";
-import {ClubApprove, JoinClubApprove} from "@/types/index";
-import {bindActionCreators} from "redux";
+import { ClubApprove, JoinClubApprove } from "@/types/index";
+import { bindActionCreators } from "redux";
+import Empty from "@/components/Empty/index";
+
+import "./approve.scss";
 
 type PageStateProps = {
-  clubApprove: Array<ClubApprove>
-  joinClubApprove: Array<JoinClubApprove>
+  clubApprove: Array<ClubApprove>;
+  joinClubApprove: Array<JoinClubApprove>;
 };
 type PageDispatchProps = {
-  getClubApprove: () => void
-  getJoinClubApprove: () => void
-  approveClub: (approveResult) => void
-  approveJoinClub: (approveResult) => void
+  getClubApprove: () => void;
+  getJoinClubApprove: () => void;
+  approveClub: (approveResult) => void;
+  approveJoinClub: (approveResult) => void;
 };
 type PageOwnProps = {};
 type PageState = {};
@@ -34,15 +37,17 @@ interface Approve {
   ({ clubs }) => ({
     clubApprove: clubs.clubApprove,
     joinClubApprove: clubs.joinClubApprove
-  }),dispatch => bindActionCreators(
-    {
-      getClubApprove,
-      getJoinClubApprove,
-      approveClub,
-      approveJoinClub
-    } as PageDispatchProps,
-    dispatch
-  )
+  }),
+  dispatch =>
+    bindActionCreators(
+      {
+        getClubApprove,
+        getJoinClubApprove,
+        approveClub,
+        approveJoinClub
+      } as PageDispatchProps,
+      dispatch
+    )
 )
 class Approve extends Component {
   config: Config = {
@@ -51,25 +56,29 @@ class Approve extends Component {
 
   componentWillMount(): void {
     this.props.getClubApprove();
-    this.props.getJoinClubApprove()
+    this.props.getJoinClubApprove();
   }
 
   approveClub = (item, result) => {
     const req = {
       clubId: item.id,
       approveStatus: result
-    }
-    this.props.approveClub(req)
+    };
+    this.props.approveClub(req);
   };
 
-  approveJoinClub =  (item, result) => {
+  approveJoinClub = (item, result) => {
     const req = {
       clubId: item.clubId,
       isAgree: result,
       recordId: item.recordId,
-      managerComment: ''
-    }
-    this.props.approveJoinClub(req)
+      managerComment: ""
+    };
+    this.props.approveJoinClub(req);
+  };
+
+  onClick = id => () => {
+    Taro.navigateTo({ url: `/pages/clubs/detail?clubId=${id}` });
   };
 
   renderClubApproveCard = item => {
@@ -85,9 +94,11 @@ class Approve extends Component {
             />
             <Text className="title">俱乐部创建</Text>
           </View>
-          <Text className="extra">{item.applyDate}</Text>
+          <Text className="extra">
+            {dayjs(item.applyDate).format("YYYY-MM-DD HH:mm:ss")}
+          </Text>
         </View>
-        <View className="card-content">
+        <View className="card-content" onClick={this.onClick(item.id)}>
           <View className="text-wrapper">
             <Text className="label">创建人：</Text>
             <Text className="text">{item.creatorName}</Text>
@@ -102,8 +113,12 @@ class Approve extends Component {
           </View>
         </View>
         <View className="card-actions">
-          <Button className="btn" onClick={()=> this.approveClub(item, false)}>拒绝</Button>
-          <Button className="btn" onClick={()=> this.approveClub(item, true)}>同意</Button>
+          <Button className="btn" onClick={() => this.approveClub(item, false)}>
+            拒绝
+          </Button>
+          <Button className="btn" onClick={() => this.approveClub(item, true)}>
+            同意
+          </Button>
         </View>
       </View>
     );
@@ -122,7 +137,9 @@ class Approve extends Component {
             />
             <Text className="title">会员加入</Text>
           </View>
-          <Text className="extra">{item.applyDate}</Text>
+          <Text className="extra">
+            {dayjs(item.applyDate).format("YYYY-MM-DD HH:mm:ss")}
+          </Text>
         </View>
         <View className="card-content">
           <View className="text-wrapper">
@@ -139,8 +156,18 @@ class Approve extends Component {
           </View>
         </View>
         <View className="card-actions">
-          <Button className="btn" onClick={() => this.approveJoinClub(item, false)}>拒绝</Button>
-          <Button className="btn" onClick={() => this.approveJoinClub(item, true)}>同意</Button>
+          <Button
+            className="btn"
+            onClick={() => this.approveJoinClub(item, false)}
+          >
+            拒绝
+          </Button>
+          <Button
+            className="btn"
+            onClick={() => this.approveJoinClub(item, true)}
+          >
+            同意
+          </Button>
         </View>
       </View>
     );
@@ -151,16 +178,15 @@ class Approve extends Component {
     const joinClubApprove = this.props.joinClubApprove;
     return (
       <View className="approve-container">
-        {clubApprove && clubApprove.map(item => (
-          <View key={item.id}>
-            {this.renderClubApproveCard(item)}
-          </View>
+        {clubApprove.map(item => (
+          <View key={item.id}>{this.renderClubApproveCard(item)}</View>
         ))}
-        {joinClubApprove && joinClubApprove.map(item => (
+        {joinClubApprove.map(item => (
           <View key={item.applicantId}>
             {this.renderMemberApproveCard(item)}
           </View>
         ))}
+        {clubApprove.length === 0 && joinClubApprove.length === 0 && <Empty />}
       </View>
     );
   }

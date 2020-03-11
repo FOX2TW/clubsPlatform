@@ -1,8 +1,13 @@
-import { GET_ACTIVITIES, GET_ACTIVITY_DETAIL } from "@/constants/index";
+import {
+  GET_ACTIVITIES,
+  GET_ACTIVITY_DETAIL,
+  GET_CLUB_ACTIVITY
+} from "@/constants/index";
 
 const INITIAL_STATE = {
   activities: [],
-  activity: {}
+  activity: {},
+  clubActivity: {}
 };
 
 export default function activity(state = INITIAL_STATE, action) {
@@ -15,7 +20,18 @@ export default function activity(state = INITIAL_STATE, action) {
     case GET_ACTIVITY_DETAIL:
       return {
         ...state,
-        activity: action.payload
+        activity: {
+          ...state.activity,
+          [action.payload.activityId]: action.payload.activity
+        }
+      };
+    case GET_CLUB_ACTIVITY:
+      return {
+        ...state,
+        clubActivity: {
+          ...state.clubActivity,
+          [action.payload.clubId]: action.payload.clubActivity
+        }
       };
     default:
       return state;

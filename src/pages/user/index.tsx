@@ -1,12 +1,18 @@
 import { ComponentClass } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
 import { AtAvatar, AtIcon } from "taro-ui";
-import { get } from "lodash";
 import { View, Text, Button } from "@tarojs/components";
+import { connect } from "@tarojs/redux";
+import { User as IUser } from "@/types/index";
+import { getUserInfo } from "@/actions/users";
 import "./index.scss";
 
-type PageStateProps = {};
-type PageDispatchProps = {};
+type PageStateProps = {
+  userInfo: IUser;
+};
+type PageDispatchProps = {
+  getUserInfo: (id) => any;
+};
 type PageOwnProps = {};
 type PageState = {
   userInfo: {
@@ -19,6 +25,16 @@ interface User {
   props: IProps;
 }
 
+@connect(
+  ({ users }) => ({
+    userInfo: users.userInfo
+  }),
+  dispatch => ({
+    getUserInfo(id) {
+      dispatch(getUserInfo(id));
+    }
+  })
+)
 class User extends Component {
   config: Config = {
     navigationBarTitleText: "个人中心",
@@ -33,16 +49,18 @@ class User extends Component {
     }
   };
 
-  componentDidMount() {
-    // this.getWxUserInfo();
+  componentDidShow() {
+    try {
+      const userId = Taro.getStorageSync("userId") || 1;
+      this.props.getUserInfo(userId);
+    } catch (e) {}
   }
 
   getWxUserInfo = res => {
     // Taro.getUserInfo().then(res => {
     //   console.log(res);
     // });
-    const userInfo = JSON.parse(get(res, "detail.rawData", ""));
-    console.log(userInfo);
+    const userInfo = JSON.parse(res.detail.rawData);
     this.setState({ userInfo });
   };
 
@@ -51,14 +69,14 @@ class User extends Component {
   };
 
   render() {
-    const { userInfo } = this.state;
+    const { userInfo } = this.props;
     return (
       <View>
         <View className="user-container">
           <View className="avatar-wrapper">
             <View className="info">
-              <AtAvatar circle image={userInfo.avatarUrl} size="large" />
-              <Text className="name">{userInfo.nickName}</Text>
+              <AtAvatar circle image={userInfo.profileImagePath} size="large" />
+              <Text className="name">{userInfo.username}</Text>
             </View>
             <AtIcon
               value="settings"
@@ -98,12 +116,14 @@ class User extends Component {
               <Text>发布活动</Text>
               <AtIcon value="chevron-right" size="20" color="#c8c8c8" />
             </Button>
+            <Button
+              className="item extra"
+              onClick={this.navigate("/pages/user/change")}
+            >
+              <Text>切换用户</Text>
+              <AtIcon value="chevron-right" size="20" color="#c8c8c8" />
+            </Button>
           </View>
-        </View>
-        <View>
-          <Button openType="getUserInfo" onGetUserInfo={this.getWxUserInfo}>
-            test get user
-          </Button>
         </View>
       </View>
     );

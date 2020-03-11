@@ -23,3 +23,12 @@ export const cancelJoinActivity = activityId => {
   const url = API.cancelJoinActivity.replace("<activityId>", activityId);
   return fetch(url, { method: "PUT" });
 };
+
+export const editActivity = data => {
+  return fetch(API.editActivity, { method: "PUT", data });
+};
+
+export const getClubActivity = clubId => {
+  const url = API.getClubActivity.replace("<clubId>", clubId);
+  return fetch(url);
+};

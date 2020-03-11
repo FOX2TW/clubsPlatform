@@ -37,11 +37,12 @@ const checkStatus = response => {
  * @return {object}           An object containing either "data" or "err"
  */
 export default async function fetch(url: string, options?: Options) {
+  const userId = Taro.getStorageSync("userId") || 1;
   const defaultOptions = {
     method: "GET",
     //mock userId
     header: {
-      currentUserId: 1
+      currentUserId: userId
     }
   };
   const newOptions = { ...defaultOptions, ...options } as Options;

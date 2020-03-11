@@ -1,0 +1,33 @@
+.member-container {
+  display: flex;
+  flex-flow: column;
+  padding-top: 20px;
+
+  .item {
+    display: flex;
+    padding: 20px;
+    align-items: center;
+    border-bottom: 1px solid #f1f1f1;
+
+    .info {
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        font-size: 30px;
+        color: rgba(0, 0, 0, 0.8);
+      }
+
+      .des {
+        padding-top: 10px;
+        font-size: 24px;
+        color: rgba(0, 0, 0, 0.5);
+
+        .email {
+          padding-right: 20px;
+        }
+      }
+    }
+  }
+}

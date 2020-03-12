@@ -139,24 +139,29 @@ class ActivityForm extends Component {
     if (activityId) {
       const newData = { ...data, activityId };
       await this.props.editActivity(newData);
-      await Taro.atMessage({
+      Taro.hideLoading();
+      Taro.atMessage({
         message: "编辑活动成功",
         type: "success",
-        duration: 500
+        duration: 1000
       });
-      Taro.navigateBack();
+      setTimeout(() => {
+        Taro.navigateBack();
+      }, 1000);
     } else {
       await this.props.createActivity(data);
-      await Taro.atMessage({
+      Taro.hideLoading();
+      Taro.atMessage({
         message: "发布活动成功",
         type: "success",
-        duration: 500
+        duration: 1000
       });
-      Taro.switchTab({
-        url: "/pages/activity/index"
-      });
+      setTimeout(() => {
+        Taro.switchTab({
+          url: "/pages/activity/index"
+        });
+      }, 1000);
     }
-    Taro.hideLoading();
   };
   nameInputChange = name => {
     this.setState({ name });
@@ -191,7 +196,17 @@ class ActivityForm extends Component {
   };
 
   onFileChange = files => {
-    this.setState({ files, picture: files[0].url });
+    if (files.length > 0) {
+      this.setState({
+        files,
+        picture: files[0].url
+      });
+    } else {
+      this.setState({
+        files,
+        picture: ""
+      });
+    }
   };
 
   onFileFail = mes => {

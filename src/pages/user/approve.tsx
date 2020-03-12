@@ -1,5 +1,5 @@
 import { ComponentClass } from "react";
-import { AtIcon } from "taro-ui";
+import { AtIcon, AtMessage } from "taro-ui";
 import Taro, { Component, Config } from "@tarojs/taro";
 import { View, Text, Button } from "@tarojs/components";
 import dayjs from "dayjs";
@@ -59,22 +59,32 @@ class Approve extends Component {
     this.props.getJoinClubApprove();
   }
 
-  approveClub = (item, result) => {
+  approveClub = async (item, result) => {
     const req = {
       clubId: item.id,
       approveStatus: result
     };
-    this.props.approveClub(req);
+    await this.props.approveClub(req);
+    Taro.atMessage({
+      message: "已同意俱乐部创建",
+      type: "success",
+      duration: 2000
+    });
   };
 
-  approveJoinClub = (item, result) => {
+  approveJoinClub = async (item, result) => {
     const req = {
       clubId: item.clubId,
       isAgree: result,
       recordId: item.recordId,
       managerComment: ""
     };
-    this.props.approveJoinClub(req);
+    await this.props.approveJoinClub(req);
+    Taro.atMessage({
+      message: "已同意会员加入",
+      type: "success",
+      duration: 2000
+    });
   };
 
   onClick = id => () => {
@@ -178,6 +188,7 @@ class Approve extends Component {
     const joinClubApprove = this.props.joinClubApprove;
     return (
       <View className="approve-container">
+        <AtMessage />
         {clubApprove.map(item => (
           <View key={item.id}>{this.renderClubApproveCard(item)}</View>
         ))}
@@ -186,7 +197,9 @@ class Approve extends Component {
             {this.renderMemberApproveCard(item)}
           </View>
         ))}
-        {clubApprove.length === 0 && joinClubApprove.length === 0 && <Empty />}
+        {clubApprove.length === 0 && joinClubApprove.length === 0 && (
+          <Empty text="还没有审批记录哟" />
+        )}
       </View>
     );
   }

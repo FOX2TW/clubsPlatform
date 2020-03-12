@@ -13,17 +13,21 @@ import {
   AtImagePicker,
   AtInput,
   AtSwitch,
-  AtTextarea
+  AtTextarea,
+  AtMessage
 } from "taro-ui";
 import cls from "classnames";
-import { Club, ClubTypes, ClubList } from "@/types/index";
+import { Club, ClubTypes, ClubDetail, ClubApply } from "@/types/index";
 import { createClub, editClub, getClubTypes } from "@/actions/clubs";
 
 import "./form.scss";
 
 type PageStateProps = {
   types: ClubTypes;
-  clubs: ClubList;
+  clubDetail: {
+    [key: number]: ClubDetail;
+  };
+  clubApply: Array<ClubApply>;
 };
 type PageDispatchProps = {
   getClubTypes: () => void;
@@ -40,7 +44,8 @@ interface ClubForm {
 @connect(
   ({ clubs }) => ({
     types: clubs.types,
-    clubs: clubs.clubs
+    clubDetail: clubs.clubDetail,
+    clubApply: clubs.clubApply
   }),
   dispatch =>
     bindActionCreators(
@@ -59,47 +64,76 @@ class ClubForm extends Component {
     isOpenType: false,
     picture: "",
     name: "",
-    type: {},
+    type: Infinity,
     introduction: "",
     address: "",
     files: []
   };
 
-  componentWillMount() {
+  componentDidMount() {
+    this.initPage();
+  }
+
+  initPage = () => {
     this.props.getClubTypes();
-    const id = parseInt(this.$router.params["id"]);
+    console.log(this.props);
+    const { id, apply } = this.$router.params;
     if (id) {
-      const filter = this.props.clubs.filter(c => c.id === id);
-      if (filter.length > 0) {
-        const club = filter[0];
-        this.setState({
-          ...club,
-          type: {
-            id: club.type,
-            name: this.props.types.filter(t => t.id === club.type)[0].name
-          }
-        });
-        Taro.setNavigationBarTitle({ title: "俱乐部修改" });
+      Taro.setNavigationBarTitle({ title: "俱乐部修改" });
+      let detail: any = {};
+      if (apply) {
+        const { clubApply } = this.props;
+        console.log(clubApply);
+        detail = {
+          ...clubApply.find(({ id: clubId }) => clubId === Number(id))
+        };
+      } else {
+        const { clubDetail } = this.props;
+        detail = { ...clubDetail[id] };
       }
+      this.setState({
+        id,
+        picture: detail.picture,
+        name: detail.name,
+        introduction: detail.introduction,
+        type: detail.type,
+        files: detail.picture ? [{ url: detail.picture }] : []
+      });
+      console.log(detail, apply);
     } else {
       Taro.setNavigationBarTitle({ title: "俱乐部创建" });
     }
-  }
+  };
 
-  onSubmit = () => {
+  onSubmit = async () => {
+    Taro.showLoading({ title: "loading..." });
     const club = {
       id: this.state.id,
       picture: this.state.picture,
       name: this.state.name,
-      type: this.state.type.id,
+      type: this.state.type,
       introduction: this.state.introduction
     };
     if (club.id) {
-      this.props.editClub(club);
+      await this.props.editClub(club);
+      Taro.hideLoading();
+      Taro.atMessage({
+        message: "编辑俱乐部成功",
+        type: "success",
+        duration: 1000
+      });
     } else {
-      this.props.createClub(club);
+      await this.props.createClub(club);
+      Taro.hideLoading();
+      Taro.atMessage({
+        message: "提交创建申请成功,等待管理员通过中~",
+        type: "success",
+        duration: 1000
+      });
     }
-    Taro.navigateBack();
+    setTimeout(() => {
+      Taro.navigateBack();
+    }, 1000);
   };
   nameInputChange = name => {
     this.setState({ name });
@@ -129,14 +163,22 @@ class ClubForm extends Component {
     });
   };
 
-  actionSheetItemClick = type => () => {
-    this.setState({ type, isOpenType: false });
+  actionSheetItemClick = types => () => {
+    this.setState({ type: types.id, isOpenType: false });
   };
 
   onFileChange = files => {
-    this.setState({
-      files
-    });
+    if (files.length > 0) {
+      this.setState({
+        files,
+        picture: files[0].url
+      });
+    } else {
+      this.setState({
+        files,
+        picture: ""
+      });
+    }
   };
   onFileFail = mes => {
     console.log(mes);
@@ -152,8 +194,10 @@ class ClubForm extends Component {
       isOpenType
     } = this.state;
     const { types } = this.props;
+    const currentType: any = types.find(n => n.id === type) || {};
     return (
       <View className="club-form-container">
+        <AtMessage />
         <AtForm onSubmit={this.onSubmit}>
           <View className="form-item">
             <View className="label-wrap">
@@ -189,8 +233,8 @@ class ClubForm extends Component {
             <View className="select-wrap">
               {isUseDefault && (
                 <View className="select" onClick={this.openTypeActionSheet}>
-                  <Text className={cls({ "select-value": !!type.name })}>
-                    {!!type.name ? type.name : "请选择类型"}
+                  <Text className={cls({ "select-value": !!currentType.name })}>
+                    {!!currentType.name ? currentType.name : "请选择类型"}
                   </Text>
                   <AtIcon value="chevron-down" size="24" color="#cdcdcd" />
                 </View>
@@ -200,18 +244,18 @@ class ClubForm extends Component {
                   name="value"
                   type="text"
                   placeholder="请输入类型"
-                  value={type.name}
+                  value={String(type)}
                   onChange={this.typeInputChange}
                 />
               )}
-              <View>
+              {/* <View>
                 <AtSwitch
                   border={false}
                   title="自定义"
                   checked={!isUseDefault}
                   onChange={this.switchChange}
                 />
-              </View>
+              </View> */}
             </View>
             <AtActionSheet
               isOpened={isOpenType}

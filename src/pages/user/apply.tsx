@@ -1,7 +1,7 @@
 import { ComponentClass } from "react";
 import Taro, { Component, Config } from "@tarojs/taro";
 import { Button, Text, View } from "@tarojs/components";
-import { AtIcon } from "taro-ui";
+import { AtIcon, AtMessage } from "taro-ui";
 import { ClubApply, JoinClubApply } from "@/types/index";
 import { connect } from "@tarojs/redux";
 import {
@@ -55,22 +55,37 @@ class Approve extends Component {
     navigationBarTitleText: "我的申请"
   };
 
-  componentWillMount(): void {
+  componentDidShow() {
     this.props.getClubApply();
     this.props.getJoinClubApply();
   }
 
-  cancelCreateClub = id => {
-    this.props.cancelCreateClub(id);
+  cancelCreateClub = async id => {
+    await this.props.cancelCreateClub(id);
+    Taro.atMessage({
+      message: "俱乐部创建撤销成功",
+      type: "success",
+      duration: 2000
+    });
   };
 
-  cancelJoinClub = id => {
-    this.props.cancelJoinClub(id);
+  cancelJoinClub = async id => {
+    await this.props.cancelJoinClub(id);
+    Taro.atMessage({
+      message: "会员加入撤销成功",
+      type: "success",
+      duration: 2000
+    });
+  };
+
+  editClub = clubId => {
+    Taro.navigateTo({ url: `/pages/clubs/form?id=${clubId}&apply=true` });
   };
 
   renderClubApproveCard = item => {
     return (
       <View className="card">
+        <AtMessage />
         <View className="card-title-wrap">
           <View>
             <AtIcon
@@ -105,6 +120,9 @@ class Approve extends Component {
             onClick={() => this.cancelCreateClub(item.id)}
           >
             撤销
+          </Button>
+          <Button className="btn" onClick={() => this.editClub(item.id)}>
+            编辑
           </Button>
         </View>
       </View>
@@ -166,7 +184,9 @@ class Approve extends Component {
         {joinList.map(item => (
           <View key={item.clubId}>{this.renderMemberApproveCard(item)}</View>
         ))}
-        {applyList.length === 0 && joinList.length === 0 && <Empty />}
+        {applyList.length === 0 && joinList.length === 0 && (
+          <Empty text="还没有申请记录哟" />
+        )}
       </View>
     );
   }

@@ -134,54 +134,63 @@ class Detail extends Component {
           </View>
         </View>
 
-        <View className="card-wrapper">
-          <View className="info-title">
-            <Text>俱乐部会员</Text>
-          </View>
-          <View className="user-wrapper">
-            <View className="users">
-              {get(detail, "members", []).map(user => (
-                <View className="user-item" key={user.id}>
-                  <AtAvatar circle image={user.profileImagePath}></AtAvatar>
-                  <Text>{user.username}</Text>
-                </View>
-              ))}
+        {detail.isApproved && (
+          <View className="card-wrapper">
+            <View className="info-title">
+              <Text>俱乐部会员</Text>
             </View>
-            <View
-              className="more"
-              onClick={this.navigate(`/pages/clubs/member?clubId=${detail.id}`)}
-            >
-              <Text>更多会员</Text>
-              <AtIcon value="chevron-right" size="20"></AtIcon>
-            </View>
-          </View>
-        </View>
-        <View className="card-wrapper">
-          <View className="info-title">
-            <Text>俱乐部活动</Text>
-          </View>
-
-          {activityList.map(activity => (
-            <View
-              className="extra-item"
-              key={activity.id}
-              onClick={this.navigate(
-                `/pages/activity/detail?id=${activity.id}`
-              )}
-            >
-              <View className="content">
-                <Text className="name">{activity.name}</Text>
-                <Text className="des">{activity.description}</Text>
+            <View className="user-wrapper">
+              <View className="users">
+                {get(detail, "members", []).map(user => (
+                  <View className="user-item" key={user.id}>
+                    <AtAvatar circle image={user.profileImagePath}></AtAvatar>
+                    <Text>{user.username}</Text>
+                  </View>
+                ))}
               </View>
-              <View className="right">
-                {activity.status === 0 && <Text className="note">招募中</Text>}
+              <View
+                className="more"
+                onClick={this.navigate(
+                  `/pages/clubs/member?clubId=${detail.id}`
+                )}
+              >
+                <Text>更多会员</Text>
                 <AtIcon value="chevron-right" size="20"></AtIcon>
               </View>
             </View>
-          ))}
-          {activityList.length === 0 && <Empty />}
-        </View>
-        {!detail.isJoin && (
+          </View>
+        )}
+
+        {detail.isApproved && (
+          <View className="card-wrapper">
+            <View className="info-title">
+              <Text>俱乐部活动</Text>
+            </View>
+
+            {activityList.map(activity => (
+              <View
+                className="extra-item"
+                key={activity.id}
+                onClick={this.navigate(
+                  `/pages/activity/detail?id=${activity.id}`
+                )}
+              >
+                <View className="content">
+                  <Text className="name">{activity.name}</Text>
+                  <Text className="des">{activity.description}</Text>
+                </View>
+                <View className="right">
+                  {activity.status === 0 && (
+                    <Text className="note">招募中</Text>
+                  )}
+                  <AtIcon value="chevron-right" size="20"></AtIcon>
+                </View>
+              </View>
+            ))}
+            {activityList.length === 0 && <Empty text="还没有活动哟" />}
+          </View>
+        )}
+        {!detail.isJoin && detail.isApproved && (
           <AtButton
             type="primary"
             className="join-btn"

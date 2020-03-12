@@ -3,7 +3,7 @@ import { View, Text } from "@tarojs/components";
 import { ComponentClass } from "react";
 import { AtSwipeAction, AtAvatar } from "taro-ui";
 import { connect } from "@tarojs/redux";
-import { ClubDetail } from "@/types/index";
+import { ClubDetail, User } from "@/types/index";
 import { deleteClubMember } from "@/actions/clubs";
 import { get } from "@/utils/tools";
 import "./member.scss";
@@ -12,6 +12,7 @@ type PageStateProps = {
   clubDetail: {
     [key: number]: ClubDetail;
   };
+  userInfo: User;
 };
 type PageDispatchProps = {
   deleteClubMember: (userId, clubId) => void;
@@ -25,8 +26,9 @@ interface Member {
 }
 
 @connect(
-  ({ clubs }) => ({
-    clubDetail: clubs.clubDetail
+  ({ clubs, users }) => ({
+    clubDetail: clubs.clubDetail,
+    userInfo: users.userInfo
   }),
   dispatch => ({
     deleteClubMember(userId, clubId) {
@@ -38,6 +40,7 @@ class Member extends Component {
   config: Config = {
     navigationBarTitleText: "俱乐部会员"
   };
+
   swipeOptions = [
     {
       text: "设置管理",
@@ -83,6 +86,7 @@ class Member extends Component {
   render() {
     const { clubId } = this.$router.params;
     const detail = get(this.props.clubDetail, clubId, {});
+    const userId = this.props.userInfo.id || Taro.getStorageSync("userId") || 1;
     return (
       <View className="member-container">
         {get(detail, "members", []).map(member => (
@@ -90,6 +94,7 @@ class Member extends Component {
             key={member.id}
             options={this.swipeOptions}
             onClick={opotion => this.handleClick(opotion, member)}
+            disabled={!detail.isManager || Number(userId) === member.id}
           >
             <View className="item">
               <AtAvatar circle image={member.profileImagePath}></AtAvatar>

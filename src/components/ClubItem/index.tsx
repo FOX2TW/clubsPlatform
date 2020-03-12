@@ -26,7 +26,7 @@ class ClubItem extends Component {
     const { isJoin, isManager } = club;
     return (
       <View className="item-container" onClick={this.props.onClick}>
-        <AtAvatar circle text="俱乐部" />
+        <AtAvatar image={club.picture} text="俱" />
         <View className="body">
           <View className="top">
             <Text className="name">{club.name}</Text>

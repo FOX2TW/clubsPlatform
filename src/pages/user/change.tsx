@@ -27,14 +27,19 @@ class Setting extends Component {
   render() {
     return (
       <View className="change-container">
-        <Text>当前用户：1，2，3</Text>
-        <AtInput
-          name="value"
-          value={this.state.value}
-          onChange={this.onChange}
-          type="text"
-          style={{ border: "1px solid red" }}
-        />
+        <Text>测试用户：</Text>
+        <View>
+          <Text>1 （管理员) ,2 （会员），3（会员）</Text>
+        </View>
+        <View className="input">
+          <AtInput
+            name="value"
+            value={this.state.value}
+            onChange={this.onChange}
+            type="text"
+            style={{ border: "1px solid red" }}
+          />
+        </View>
         <AtButton type="primary" onClick={this.submit}>
           切换
         </AtButton>

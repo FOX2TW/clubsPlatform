@@ -1,7 +1,7 @@
 import Taro, { Component, Config } from "@tarojs/taro";
 import { View, Text } from "@tarojs/components";
 import { ComponentClass } from "react";
-import { AtSwipeAction, AtAvatar } from "taro-ui";
+import { AtSwipeAction, AtAvatar, AtMessage } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { ClubDetail, User } from "@/types/index";
 import { deleteClubMember } from "@/actions/clubs";
@@ -66,7 +66,11 @@ class Member extends Component {
           const { clubId } = this.$router.params;
           const detail = get(this.props.clubDetail, clubId, {});
           await this.props.deleteClubMember(member.id, detail.id);
-          Taro.navigateBack();
+          Taro.atMessage({
+            message: "会员踢出成功",
+            type: "success",
+            duration: 2000
+          });
         }
       }
     });
@@ -89,6 +93,7 @@ class Member extends Component {
     const userId = this.props.userInfo.id || Taro.getStorageSync("userId") || 1;
     return (
       <View className="member-container">
+        <AtMessage />
         {get(detail, "members", []).map(member => (
           <AtSwipeAction
             key={member.id}
